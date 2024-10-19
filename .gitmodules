@@ -1,4 +1,0 @@
-[submodule "pages/build/petit"]
-	path = pages/build/petit
-	url = git@gitlab.com:mcbeeringi/petit
-	branch = .
