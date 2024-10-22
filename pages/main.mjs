@@ -1,5 +1,4 @@
 import { readdir } from "node:fs/promises";
-Bun.write("build/index.html",`Hello Bun.write!`);
 (await readdir("src",{recursive:1})).forEach(x=>
 	Bun.write("build/"+x,Bun.file("src/"+x))
 );
