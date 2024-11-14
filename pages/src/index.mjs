@@ -1,14 +1,15 @@
-import{}from'../html.mjs';
+import{HTML as d}from'../formats/html.mjs';
 
 export default new Blob([
-	doctype(),
-	html({lang:'ja'},[
-		head([
-			meta({charset:'utf-8'}),
-			title('Document')
+	d.doctype(),
+	d.html({lang:'ja'},[
+		d.head([
+			d.meta({charset:'utf-8'}),
+			d.meta({name:'viewport',content:'width=device-width,initial-scale=1'}),
+			d.title('Document')
 		]),
-		body([
-			h1('Hello world!')
+		d.body([
+			d.h1('Hello world!')
 		])
 	])
 ]);
