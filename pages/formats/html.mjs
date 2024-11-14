@@ -28,4 +28,6 @@ slot,template
 	x={tag:x[0]=='#'?x.slice(1):x,is_void:x[0]=='#'},
 	a[x]=(...w)=>elem(x,...w),
 	a
-),{})
+),{
+	doctype:(w='html')=>`<!DOCTYPE ${w}>\n`,
+})
