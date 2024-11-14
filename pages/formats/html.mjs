@@ -1,14 +1,14 @@
 const
-elem=({tag,is_void},...arg)=>(
+elem=({tag,is_void})=>(...arg)=>(
 	arg=is_void?{
 		attr:Object.assign({},...arg)
 	}:{
 		attr:Object.assign({},...arg.slice(0,-1)),
-		x:arg[arg.length-1]
+		x:arg[arg.length-1]||''
 	},
 	arg.attr=Object.entries(arg.attr).reduce((a,[i,x])=>a+` ${i}="${x}"`,''),
-	is_void||Array.isArray(arg.x)&&(arg.x=arg.x.join('')),
-	`<${tag}${arg.attr}>${is_void?'':`${arg.x}</${tag}>`}`
+	is_void||Array.isArray(arg.x)&&(arg.x='\n'+arg.x.join('')),
+	`<${tag}${arg.attr}>${is_void?'':`${arg.x}</${tag}>`}\n`
 ),
 
 HTML=`html,
@@ -28,10 +28,10 @@ details,dialog,summary,
 slot,template
 `.match(/#?\w+/g).reduce((a,x)=>(
 	x={tag:x[0]=='#'?x.slice(1):x,is_void:x[0]=='#'},
-	a[x.tag]=(...w)=>elem(x,...w),
+	a[x.tag]=elem(x),
 	a
 ),{
-	doctype:(w='html')=>`<!DOCTYPE ${w}>`,
+	doctype:(w='html')=>`<!DOCTYPE ${w}>\n`,
 });
 
 export{elem,HTML};

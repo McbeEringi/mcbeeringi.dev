@@ -9,7 +9,8 @@ export default new Blob([
 			d.title('Document')
 		]),
 		d.body([
-			d.h1('Hello world!')
+			d.h1('Hello world!'),
+			d.p(['aaa','eee'])
 		])
 	])
 ]);
