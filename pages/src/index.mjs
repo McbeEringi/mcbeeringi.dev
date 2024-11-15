@@ -10,7 +10,9 @@ export default new Blob([
 		]),
 		d.body([
 			d.h1('Hello world!'),
-			d.p(['aaa','eee'])
+			d.p(['aaa','eee']),
+			d.br(),
+			d.img({src:'favicon.ico'})
 		])
 	])
 ]);
