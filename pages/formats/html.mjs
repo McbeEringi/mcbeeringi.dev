@@ -32,6 +32,7 @@ slot,template
 	a
 ),{
 	doctype:(w='html')=>`<!DOCTYPE ${w}>\n`,
+	custom:elem
 });
 
 export{elem,HTML};
