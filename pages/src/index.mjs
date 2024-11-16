@@ -1,7 +1,8 @@
 import{HTML as d}from'../formats/html.mjs';
 
+
 export default new Blob([
-	d.doctype(),
+	d.doctype('html'),
 	d.html({lang:'ja'},[
 		d.head([
 			d.meta({charset:'utf-8'}),
@@ -12,7 +13,10 @@ export default new Blob([
 			d.h1('Hello world!'),
 			d.p(['aaa','eee']),
 			d.br(),
-			d.img({src:'favicon.ico'})
+			d.img({src:'favicon.ico'}),
+			d.script(`(${()=>{
+				console.log('hello',self);
+			}})();`)
 		])
 	])
 ]);

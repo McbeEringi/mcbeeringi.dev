@@ -30,7 +30,7 @@ slot,template
 	a[x.tag]=elem(x),
 	a
 ),{
-	doctype:(w='html')=>`<!DOCTYPE ${w}>\n`,
+	doctype:w=>`<!DOCTYPE ${w}>\n`,
 	custom:elem
 });
 
