@@ -7,4 +7,4 @@ await rmdir('build',{recursive:1});await mkdir('build');
 	Bun.write('build/'+x,Bun.file('assets/'+x))
 ));
 
-Bun.write('build/test.html',test);
+Bun.write('build/index.html',test);

@@ -7,13 +7,19 @@ export default new Blob([
 		d.head([
 			d.meta({charset:'utf-8'}),
 			d.meta({name:'viewport',content:'width=device-width,initial-scale=1'}),
-			d.title('Document')
+			d.title('index')
 		]),
 		d.body([
-			d.h1('Hello world!'),
-			d.p(['aaa','eee']),
+			d.h1('mcbeeringi.dev'),
+			d.h2('WIP...'),
+			'フレームワーク、諸説ある',d.br(),
+			'/ == pages.mcbeeringi.dev',d.br(),
+			d.a({href:"/petit/"},'/petit/ == petit.mcbeeringi.dev'),d.br(),
+			d.a({href:"/dotfiles/"},'/dotfiles/ == dotfiles.mcbeeringi.dev'),d.br(),
+			d.a({href:"/ghp/"},'/ghp/ == mcbeeringi.github.io'),d.br(),
 			d.br(),
-			d.img({src:'favicon.ico'}),
+			d.a({href:"//api.mcbeeringi.dev"},'api.mcbeeringi.dev'),d.br(),
+		
 			d.script(`(${()=>{
 				console.log('hello',self);
 			}})();`)
