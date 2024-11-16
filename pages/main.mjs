@@ -9,7 +9,7 @@ await rmdir('build',{recursive:1});await mkdir('build');
 (await readdir('src',{recursive:1,withFileTypes:1})).reduce(async(a,x)=>(a=await a,x.isFile()||x.isSymbolicLink())&&(
 	x='./'+(x.parentPath+'/'+x.name),x.slice(-4)=='.mjs'&&(
 		(await import(x)).default.map(x=>(
-			Bun.write('build/'+x.name,x.buffer)
+			Bun.write('build'+x.name,x.buffer)
 		))
 	),
 	a
