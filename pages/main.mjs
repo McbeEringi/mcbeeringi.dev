@@ -1,16 +1,48 @@
 import { readdir, mkdir, rmdir } from 'node:fs/promises';
 
-await rmdir('build',{recursive:1});await mkdir('build');
-// (await readdir('assets',{recursive:1,withFileTypes:1})).forEach(x=>(x.isFile()||x.isSymbolicLink())&&(
-// 	x=(x.parentPath+'/'+x.name).slice('assets/'.length),
-// 	Bun.write('build/'+x,Bun.file('assets/'+x))
-// ));
+const
+src=async({dir,url})=>(
+	url=new RegExp((new URL(url).pathname.match(/[^/]+/g)||[]).map(
+		(x,i,a)=>(
+			x=a.slice(0,-i||void 0).join('/'),
+			`(?:^${x}(?:\\..*)*.mjs$)|(?:^${x}/index(?:\\..*)*.mjs$)`
+		)
+	).join('|')||'(?:^index(?:\\..*)*.mjs$)'),
+	(await readdir('src',{recursive:1,withFileTypes:1})).filter(x=>url.test([x.parentPath,x.name].join('/').slice(dir.length+1)))
+);
 
-(await readdir('src',{recursive:1,withFileTypes:1})).reduce(async(a,x)=>(a=await a,x.isFile()||x.isSymbolicLink())&&(
-	x='./'+(x.parentPath+'/'+x.name),x.slice(-4)=='.mjs'&&(
-		(await import(x)).default.map(x=>(
-			Bun.write('build'+x.name,x.buffer)
-		))
+({
+	build:async(idir='src',odir='build')=>(
+		await rmdir(odir,{recursive:1}),
+		await mkdir(odir),
+		(await readdir(idir,{recursive:1,withFileTypes:1})).reduce(async(a,x)=>(a=await a,x.isFile()||x.isSymbolicLink())&&(
+			x.name.slice(-4)=='.mjs'&&(
+				(await import('./'+[x.parentPath,x.name].join('/'))).default.map(y=>(
+					Bun.write(y.name[0]=='/'?
+						odir+y.name:
+						[odir,x.parentPath.slice(idir.length+1),y.name].join('/'),
+						y.buffer
+					)
+				))
+			),
+			a
+		),[])
 	),
-	a
-),[]);
+	dev:async(idir='src')=>(
+		Bun.serve({
+			async fetch(req){return(
+				console.log(req.url),
+				req=await(await src({
+					dir:idir,
+					url:req.url
+				}))
+				.reduce(async(a,x)=>(a=await a,
+					x=(await import('./'+[x.parentPath,x.name].join('/'))).default,
+					a
+				),null)
+				,console.log(req),
+				new Response(req)
+			);},
+		})
+	)
+})[Bun.argv.slice(2)[0]||'build']();

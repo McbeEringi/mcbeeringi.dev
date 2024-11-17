@@ -1,13 +1,14 @@
 import{HTML as d}from'../formats/html.mjs';
 export default [
 	{
-		name:'/index.html',
+		name:'index.html',
 		buffer:d.doctype('html')+
 		d.html({lang:'ja'},[
 			d.head([
 				d.meta({charset:'utf-8'}),
 				d.meta({name:'viewport',content:'width=device-width,initial-scale=1'}),
-				d.title('index')
+				d.title('index'),
+				d.link({rel:'stylesheet',href:'src/style.css'})
 			]),
 			d.body([
 				d.h1('mcbeeringi.dev'),

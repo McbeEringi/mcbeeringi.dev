@@ -1,7 +1,7 @@
 import{HTML as d}from'../formats/html.mjs';
 export default [
 	{
-		name:'/404.html',
+		name:'404.html',
 		buffer:d.doctype('html')+
 		d.html({lang:'ja'},[
 			d.head([
