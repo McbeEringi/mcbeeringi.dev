@@ -16,32 +16,32 @@ src=async({dir,url})=>(
 		await rmdir(odir,{recursive:1}),
 		await mkdir(odir),
 		(await readdir(idir,{recursive:1,withFileTypes:1})).reduce(async(a,x)=>(
-			a=await a,
+			await a,
 			x.isFile()&&x.name.slice(-4)=='.mjs'&&(
 				x.x=(await import('./'+[x.parentPath,x.name].join('/'))).default,
 				console.log([x.parentPath,x.name].join('/'),x.x),
 				x.x&&(f=>f(f))(
 					f=>(od,w)=>Object.entries(w).forEach(([i,y])=>(y instanceof Blob?Bun.write:f(f))([od,i].join('/'),y))
 				)([odir,x.parentPath.slice(idir.length+1)].join('/'),{[x.name.slice(0,-4)]:x.x})
-			),
-			a
+			)
 		),0)
 	),
-	// dev:async(idir='src')=>(
-	// 	Bun.serve({
-	// 		async fetch(req){return(
-	// 			console.log(req.url),
-	// 			req=await(await src({
-	// 				dir:idir,
-	// 				url:req.url
-	// 			}))
-	// 			.reduce(async(a,x)=>(a=await a,
-	// 				x=(await import('./'+[x.parentPath,x.name].join('/'))).default,
-	// 				a
-	// 			),null)
-	// 			,console.log(req),
-	// 			new Response(req)
-	// 		);},
-	// 	})
-	// )
+	dev:async(idir='src')=>(
+		Bun.serve({
+			async fetch(req){return(
+				console.log(req.url),
+				req=await(await src({
+					dir:idir,
+					url:req.url
+				}))
+				.reduce(async(a,x)=>(
+					a=await a,
+					x=(await import('./'+[x.parentPath,x.name].join('/'))).default,
+					a
+				),null),
+				console.log(req),
+				new Response(req)
+			);},
+		})
+	)
 })[Bun.argv.slice(2)[0]||'build']();
