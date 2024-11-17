@@ -21,7 +21,7 @@ src=async({dir,url})=>(
 				x.x=(await import('./'+[x.parentPath,x.name].join('/'))).default,
 				console.log([x.parentPath,x.name].join('/'),x.x),
 				x.x&&(f=>f(f))(
-					f=>(od,w)=>Object.entries(w).forEach(([i,y])=>(y instanceof Blob?Bun.write:f(f))([od,i].join('/'),y))
+					f=>(od,w)=>Object.entries(w).forEach(([i,y])=>i.includes('/')||(y instanceof Blob?Bun.write:f(f))([od,i].join('/'),y))
 				)([odir,x.parentPath.slice(idir.length+1)].join('/'),{[x.name.slice(0,-4)]:x.x})
 			)
 		),0)
