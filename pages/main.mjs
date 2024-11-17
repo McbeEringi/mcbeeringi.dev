@@ -30,7 +30,10 @@ src=async({dir,url})=>(
 		Bun.serve({
 			async fetch(req){return(
 				console.log(req.url),
-				req=await(await src({
+
+				console.log(
+				
+				await(await src({
 					dir:idir,
 					url:req.url
 				}))
@@ -39,8 +42,14 @@ src=async({dir,url})=>(
 					x=(await import('./'+[x.parentPath,x.name].join('/'))).default,
 					a
 				),null),
-				console.log(req),
-				new Response(req)
+
+				),
+				new Response(new Blob([JSON.stringify({
+					method:req.method,
+					url:req.url,
+					headers:req.headers,
+					body:req.body&&await req.body.text()
+				},0,'\t')],{type:'application/json'}))
 			);},
 		})
 	)
