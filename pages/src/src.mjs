@@ -1,3 +1,3 @@
-import { cp_r } from '../formats/copy.mjs';
+import { cp_r } from '../formats/cp.mjs';
 
 export default await cp_r('assets/src');
