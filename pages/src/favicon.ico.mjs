@@ -1,6 +1,1 @@
-export default [
-	{
-		name:'favicon.ico',
-		buffer:Bun.file('assets/favicon.ico')
-	}
-];
+export default Bun.file('assets/favicon.ico');
