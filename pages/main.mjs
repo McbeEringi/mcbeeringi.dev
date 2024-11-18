@@ -1,16 +1,5 @@
 import { readdir, mkdir, rmdir } from 'node:fs/promises';
 
-const
-src=async({dir,url})=>(
-	url=new RegExp((new URL(url).pathname.match(/[^/]+/g)||[]).map(
-		(x,i,a)=>(
-			x=a.slice(0,-i||void 0).join('/'),
-			`(?:^${x}(?:\\..*)*.mjs$)|(?:^${x}/index(?:\\..*)*.mjs$)`
-		)
-	).join('|')||'(?:^index(?:\\..*)*.mjs$)'),
-	(await readdir('src',{recursive:1,withFileTypes:1})).filter(x=>url.test([x.parentPath,x.name].join('/').slice(dir.length+1)))
-);
-
 ({
 	build:async(idir='src',odir='build')=>(
 		await rmdir(odir,{recursive:1}),
@@ -26,31 +15,30 @@ src=async({dir,url})=>(
 			)
 		),0)
 	),
-	dev:async(idir='src')=>(
-		Bun.serve({
-			async fetch(req){return(
-				console.log(req.url),
+	dev:async(idir='src')=>Bun.serve({
+		async fetch(req){return(
+			console.log(req.url),
+			console.log(
 
-				console.log(
-				
-				await(await src({
-					dir:idir,
-					url:req.url
-				}))
+				req.regexp=new RegExp([...(new URL(req.url).pathname.match(/[^/]+/g)||[]),'index'].map((_,i,a)=>`(?:^${a.slice(0,-i||void 0).join('/')}(?:\\..*)*.mjs$)`).join('|')),
+				await(await readdir(idir,{recursive:1,withFileTypes:1}))
+				.sort((a,b)=>([a,b]=[a,b].map(x=>x.parentPath.split('/').length),b-a))
+				.filter(x=>req.regexp.test([x.parentPath,x.name].join('/').slice(idir.length+1)))
 				.reduce(async(a,x)=>(
 					a=await a,
 					x=(await import('./'+[x.parentPath,x.name].join('/'))).default,
+					console.log(x),
 					a
-				),null),
+				),null)
+				
+			),
 
-				),
-				new Response(new Blob([JSON.stringify({
-					method:req.method,
-					url:req.url,
-					headers:req.headers,
-					body:req.body&&await req.body.text()
-				},0,'\t')],{type:'application/json'}))
-			);},
-		})
-	)
+			new Response(new Blob([JSON.stringify({
+				method:req.method,
+				url:req.url,
+				headers:req.headers,
+				body:req.body&&await req.body.text()
+			},0,'\t')],{type:'application/json'}))
+		);},
+	})
 })[Bun.argv.slice(2)[0]||'build']();
