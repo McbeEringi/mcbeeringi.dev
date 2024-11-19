@@ -12,7 +12,7 @@ tmpl=({title,depth},w)=>new Blob([
 		]),
 		d.body(w)
 	])
-]);
+],{type:'text/html'});
 
 export * from'./html.mjs';
 export{tmpl};
