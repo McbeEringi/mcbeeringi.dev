@@ -17,6 +17,7 @@ import { readdir, mkdir, rmdir } from 'node:fs/promises';
 	),
 	dev:(idir='src')=>Bun.serve({
 		fetch:async w=>(
+			Object.keys(require.cache).forEach(x=>(x.includes(import.meta.dir)&&delete require.cache[x])),
 			w={
 				req:w,
 				path:new URL(w.url).pathname,
@@ -40,9 +41,11 @@ import { readdir, mkdir, rmdir } from 'node:fs/promises';
 					console.log(p.p),
 					p.x&&new Response(p.x)
 				),
-				main:async()=>w.path.slice(-1)=='/'?
+				main:async()=>(
+					w.path.slice(-1)=='/'?
 					await w.search('index'):
 					await w.search()||await w.search('/index')&&Response.redirect(w.path+'/')
+				)||new Response(null,{status:404})
 			},
 			console.log(w.req.url),
 			await w.main()
