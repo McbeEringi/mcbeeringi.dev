@@ -1,15 +1,7 @@
-const
-elem=({tag,is_void})=>(...arg)=>(
-	arg=arg.reduce((a,x)=>(
-		Array.isArray(x)?
-		a.x+='\n'+x.join(''):
-		typeof x=='object'?Object.assign(a.attr,x):a.x+=x,
-		a
-	),{attr:{},x:''}),
-	arg.attr=Object.entries(arg.attr).reduce((a,[i,x])=>a+` ${i}="${x}"`,''),
-	`<${tag}${arg.attr}>${is_void?'':`${arg.x}</${tag}>`}\n`
-),
+import{elem as _elem}from'./sgml_like.mjs';
 
+const
+elem=({tag,is_void})=>_elem({tag,type:is_void?'void':'normal'}),
 HTML=`html,
 #base,head,#link,#meta,style,title,
 body,
@@ -30,7 +22,7 @@ slot,template
 	a[x.tag]=elem(x),
 	a
 ),{
-	doctype:w=>`<!DOCTYPE ${w}>\n`,
+	doctype:_elem({tag:'DOCTYPE',type:'dtd'}),
 	custom:elem
 });
 
