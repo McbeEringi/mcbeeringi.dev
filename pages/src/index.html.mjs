@@ -1,6 +1,6 @@
 import{HTML as d,tmpl}from'../formats/html.tmpl.mjs';
 
-export default tmpl({title:'index',depth:0},[
+export default tmpl({title:'index',root:''},[
 	d.h1('mcbeeringi.dev'),
 	d.h2('WIP...'),
 	'フレームワーク、諸説ある',d.br(),
