@@ -1,4 +1,4 @@
-import{HTML as d,tmpl}from'../formats/html.tmpl.mjs';
+import{HTML as d,tmpl}from'../templates/html.tmpl.mjs';
 
 export default tmpl({title:'index',root:''},[
 	d.h1('mcbeeringi.dev'),

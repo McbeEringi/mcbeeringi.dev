@@ -1,4 +1,5 @@
 import{SVG as d}from'../formats/svg.mjs';
+import{icon as icon_png}from'../templates/icon.png.mjs';
 
 const
 icon=({bg='#fff',fg='#000'}={})=>new Blob([d.svg({width:512,height:512,viewBox:[0,0,64,64]},[
@@ -17,5 +18,9 @@ export default {
 	'icon.svg':icon(),
 	'icon_.svg':icon({bg:0}),
 	'icon!.svg':icon({fg:'#fff',bg:'#222'}),
-	'icon!_.svg':icon({fg:'#fff',bg:0})
+	'icon!_.svg':icon({fg:'#fff',bg:0}),
+	'icon.png':await icon_png(),
+	'icon_.png':await icon_png({bg:0}),
+	'icon!.png':await icon_png({fg:0xffffffff,bg:0x222222ff}),
+	'icon!_.png':await icon_png({fg:0xffffffff,bg:0}),
 };

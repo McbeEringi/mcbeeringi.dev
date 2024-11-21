@@ -1,4 +1,4 @@
-import{HTML as d}from'./html.mjs';
+import{HTML as d}from'../formats/html.mjs';
 
 const
 tmpl=({title,root},w)=>new Blob([
@@ -14,5 +14,5 @@ tmpl=({title,root},w)=>new Blob([
 	])
 ],{type:'text/html'});
 
-export * from'./html.mjs';
+export * from'../formats/html.mjs';
 export{tmpl};
