@@ -1,10 +1,11 @@
 import { readdir, mkdir, rmdir } from 'node:fs/promises';
+import {Glob} from 'bun';
 
 ({
 	build:async(idir='src',odir='build')=>(
 		await rmdir(odir,{recursive:!0}),
 		await mkdir(odir),
-		(await readdir(idir,{recursive:!0,withFileTypes:!0})).reduce(async(a,x)=>(
+		await(await readdir(idir,{recursive:!0,withFileTypes:!0})).reduce(async(a,x)=>(
 			await a,
 			x.isFile()&&x.name.slice(-4)=='.mjs'&&(
 				x.x=(await import('./'+[x.parentPath,x.name].join('/'))).default,
@@ -13,7 +14,8 @@ import { readdir, mkdir, rmdir } from 'node:fs/promises';
 					f=>(od,w)=>Object.entries(w).forEach(([i,y])=>i.includes('/')||(y instanceof Blob?Bun.write:f(f))([od,i].join('/'),y))
 				)([odir,x.parentPath.slice(idir.length+1)].join('/'),{[x.name.slice(0,-4)]:x.x})
 			)
-		),0)
+		),0),
+		console.log(await Array.fromAsync(new Glob('**/*.mjs').scan('.')))
 	),
 	dev:(idir='src')=>Bun.serve({
 		fetch:async w=>(
