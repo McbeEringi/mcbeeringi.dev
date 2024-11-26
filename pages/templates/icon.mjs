@@ -23,7 +23,17 @@ png=async({fg=0x000000ff,bg=0xffffffff}={})=>(
 			])
 		:x.bin
 	)),{type:'image/png'})
-);
+),
+icons=async({name='icon'}={})=>({
+	[`${name}.svg`]:svg(),
+	[`${name}_.svg`]:svg({bg:0}),
+	[`${name}!.svg`]:svg({fg:'#fff',bg:'#222'}),
+	[`${name}!_.svg`]:svg({fg:'#fff',bg:0}),
+	[`${name}.png`]:await png(),
+	[`${name}_.png`]:await png({bg:0}),
+	[`${name}!.png`]:await png({fg:0xffffffff,bg:0x222222ff}),
+	[`${name}!_.png`]:await png({fg:0xffffffff,bg:0}),
+})
 
 
-export{svg,png};
+export{svg,png,icons};
