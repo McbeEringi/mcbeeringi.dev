@@ -1,10 +1,8 @@
-import { mkdir, rmdir } from 'node:fs/promises';
-import {Glob} from 'bun';
+import {Glob,$} from 'bun';
 
 ({
 	build:async(idir='src',odir='build')=>(
-		await rmdir(odir,{recursive:!0}),
-		await mkdir(odir),
+		await $`rm -rf ${odir};mkdir ${odir}`,
 		await(await Array.fromAsync(new Glob(`${idir}/**/*.mjs`).scan('.'))).reduce(async(a,x)=>(
 			await a,
 			x={w:(await import(`./${x}`)).default,x:x.match(new RegExp(`^${idir}/?(.*)/(.+)$`)).slice(1)},
