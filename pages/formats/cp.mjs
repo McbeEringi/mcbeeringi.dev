@@ -1,12 +1,9 @@
-import { readdir } from 'node:fs/promises';
+import {Glob} from 'bun';
 
 const
-cp_r=async w=>(await readdir(w,{recursive:!0,withFileTypes:!0})).reduce((a,x)=>(
-	x.isFile()&&(
-		(x.parentPath.slice(w.length+1).match(/[^/]+/g)||[]).reduce((b,y)=>(
-			b[y]||(b[y]={})
-		),a)[x.name]=Bun.file([x.parentPath,x.name].join('/'))
-	),
+cp_r=async w=>(await Array.fromAsync(new Glob(`${w}/**/*`).scan('.'))).reduce((a,x)=>(
+	x={x,p:x.match(new RegExp(`^${w}/?(.*)/(.+)$`)).slice(1)},
+	(x.p[0].match(/[^/]+/g)||[]).reduce((b,y)=>b[y]||(b[y]={}),a)[x.p[1]]=Bun.file(x.x),
 	a
 ),{});
 
