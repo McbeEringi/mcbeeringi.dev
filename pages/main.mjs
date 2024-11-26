@@ -1,7 +1,9 @@
 import {Glob,$} from 'bun';
 
+const cfg={idir:'src',odir:'build'};
+
 ({
-	build:async(idir='src',odir='build')=>(
+	build:async({idir,odir})=>(
 		await $`rm -rf ${odir};mkdir ${odir}`,
 		await(await Array.fromAsync(new Glob(`${idir}/**/*.mjs`).scan('.'))).reduce(async(a,x)=>(
 			await a,
@@ -12,7 +14,8 @@ import {Glob,$} from 'bun';
 			)([odir,x.x[0]].join('/'),{[x.x[1].slice(0,-4)]:x.w})
 		),0)
 	),
-	dev:(idir='src')=>Bun.serve({
+	dev:({idir})=>Bun.serve({
+		development:1,
 		fetch:async w=>(
 			Object.keys(require.cache).forEach(x=>(x.includes(import.meta.dir)&&delete require.cache[x])),
 			w={
@@ -46,4 +49,4 @@ import {Glob,$} from 'bun';
 			await w.main()
 		)
 	})
-})[Bun.argv.slice(2)[0]||'build']();
+})[Bun.argv.slice(2)[0]||'build'](cfg);
