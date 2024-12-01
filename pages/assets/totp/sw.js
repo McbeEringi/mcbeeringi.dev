@@ -19,7 +19,7 @@ d=[
 
 Object.entries({
 	install:e=>Promise.all(d.map(async x=>x.init&&(await caches.open(x.id)).addAll(x.init))),
-	activate:async e=>await Promise.all((await caches.keys()).map(x=>d.some(_=>_.id==x)||caches.delete(x))),
+	activate:async e=>await Promise.all((await caches.keys()).map(async x=>d.some(_=>_.id==x)||await caches.delete(x))),
 	fetch:async e=>e.respondWith((async (r,x)=>x?(x.slice(0,6)=='bytes='&&(x=x.slice(6).split(/,\s*/)).length==1?(
 		console.log(`RANGE ${x}`),
 		x=x.split('-'),
@@ -40,8 +40,8 @@ Object.entries({
 	):Response.error()):r)(
 		// (await caches.match(e.request.url,{ignoreSearch:1}))||((r,c)=>(c.put(e.request.url,r),r))(await Promise.all([fetch(e.request.url),caches.open(d.find(x=>x.misc).id)])),
 		await fetch(e.request.url).then(
-			r=>(caches.open(d.find(x=>x.misc).id).put(e.request.url,r),r),
-			_=>caches.match(e.request.url,{ignoreSearch:1})
+			async r=>(await(await caches.open(d.find(x=>x.misc).id)).put(e.request.url,r),r),
+			async _=>(await caches.match(e.request.url,{ignoreSearch:1}))
 		),
 		e.request.headers.get('range')
 	))
