@@ -15,11 +15,6 @@
 	<link rel="apple-touch-icon" href="img/icon.png">
 	<link rel="manifest" href="mf.json">
 	<meta name="theme-color" content="#6ca8">
-	<script>
-		navigator.serviceWorker&&location.protocol.includes('http')&&addEventListener('load',async()=>console.log(
-			await navigator.serviceWorker.register('sw.js',{type:'module',updateViaCache:'none'})
-		),{once:1});
-	</script>
 	<style>
 		@media(prefers-color-scheme:dark){
 			:root{background-color:#222;color:#fff;}
@@ -34,6 +29,11 @@
 	<pre id="log"></pre>
 	<script type="module">
 		import{totp,migurl}from'https://mcbeeringi.dev/petit/totp.mjs';
+
+		navigator.serviceWorker&&location.protocol.includes('http')&&addEventListener('load',async()=>console.log(
+			await navigator.serviceWorker.register('sw.js')//,{type:'module',updateViaCache:'none'})
+		),{once:1});
+
 		const core=async()=>(
 			log.textContent=JSON.stringify({
 				t:new Date,
