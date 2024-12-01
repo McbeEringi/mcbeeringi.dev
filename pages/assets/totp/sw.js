@@ -45,4 +45,6 @@ Object.entries({
 		),
 		e.request.headers.get('range')
 	))
-}).forEach(([i,x])=>addEventListener(i,e=>(console.log(e),e.waitUntil(x(e)))));
+}).forEach(([i,x])=>self.addEventListener(i,e=>(console.log(e),e.waitUntil(x(e)))));
+
+console.log('hello from sw');
