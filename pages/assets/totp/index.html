@@ -45,6 +45,8 @@
 		),
 		main=async()=>(await core(),setTimeout(main,1000-Date.now()%1000));
 
+		urls.oninput=_=>localStorage.migurls=urls.value;
+		localStorage.migurls&&(urls.value=localStorage.migurls);
 		main();
 	</script>
 </body>
