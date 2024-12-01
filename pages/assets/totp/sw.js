@@ -38,11 +38,11 @@ Object.entries({
 			}
 		})
 	):Response.error()):r)(
-		// (await caches.match(e.request.url,{ignoreSearch:1}))||((r,c)=>(c.put(e.request.url,r),r))(await Promise.all([fetch(e.request.url),caches.open(d.find(x=>x.misc).id)])),
-		await fetch(e.request.url).then(
-			async r=>(await(await caches.open(d.find(x=>x.misc).id)).put(e.request.url,r.clone()),r),
-			async _=>(await caches.match(e.request.url,{ignoreSearch:1}))
-		),
+		(await caches.match(e.request.url,{ignoreSearch:1}))||((r,c)=>(c.put(e.request.url,r.clone()),r))(await Promise.all([fetch(e.request.url),caches.open(d.find(x=>x.misc).id)])),
+		// await fetch(e.request.url).then(
+		// 	async r=>(await(await caches.open(d.find(x=>x.misc).id)).put(e.request.url,r.clone()),r),
+		// 	async _=>(await caches.match(e.request.url,{ignoreSearch:1}))
+		// ),
 		e.request.headers.get('range')
 	))
 }).forEach(([i,x])=>self.addEventListener(i,e=>(console.log(e),e.waitUntil(x(e)))));
