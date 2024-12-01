@@ -3,11 +3,11 @@
 const
 d=[
 	{
-		id:'totp_index_2412020',
+		id:'totp_index_2412021',
 		init:['index.html']
 	},
 	{
-		id:'totp_img_2412020',
+		id:'totp_img_2412021',
 		init:['img/icon.svg','img/icon.png']
 	},
 	{
@@ -20,7 +20,7 @@ d=[
 Object.entries({
 	install:e=>Promise.all(d.map(async x=>x.init&&(await caches.open(x.id)).addAll(x.init))),
 	activate:async e=>await Promise.all((await caches.keys()).map(async x=>d.some(_=>_.id==x)||await caches.delete(x))),
-	fetch:async e=>e.respondWith(await(async (r,x)=>(console.log(e.request.url,r,await caches.match(e.request.url,{ignoreSearch:1})),x)?(x.slice(0,6)=='bytes='&&(x=x.slice(6).split(/,\s*/)).length==1?(
+	fetch:async e=>e.respondWith(await(async (r,x)=>x?(x.slice(0,6)=='bytes='&&(x=x.slice(6).split(/,\s*/)).length==1?(
 		console.log(`RANGE ${x}`),
 		x=x.split('-'),
 		r=await r.arrayBuffer(),
@@ -38,11 +38,11 @@ Object.entries({
 			}
 		})
 	):Response.error()):r)(
-		(await caches.match(e.request.url,{ignoreSearch:1}))||((r,c)=>(c.put(e.request.url,r.clone()),r))(await Promise.all([fetch(e.request.url),caches.open(d.find(x=>x.misc).id)])),
-		// await fetch(e.request.url).then(
-		// 	async r=>(await(await caches.open(d.find(x=>x.misc).id)).put(e.request.url,r.clone()),r),
-		// 	async _=>(await caches.match(e.request.url,{ignoreSearch:1}))
-		// ),
+		// (await caches.match(e.request.url,{ignoreSearch:1}))||(([r,c])=>(c.put(e.request.url,r.clone()),r))(await Promise.all([fetch(e.request.url),caches.open(d.find(x=>x.misc).id)])),
+		await fetch(e.request.url).then(
+			async r=>(await(await caches.open(d.find(x=>x.misc).id)).put(e.request.url,r.clone()),r),
+			async _=>(await caches.match(e.request.url,{ignoreSearch:1}))
+		),
 		e.request.headers.get('range')
 	))
 }).forEach(([i,x])=>self.addEventListener(i,e=>(console.log(e),e.waitUntil(x(e)))));
