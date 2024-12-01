@@ -1,32 +1,9 @@
 //https://developer.mozilla.org/ja/docs/Web/Progressive_web_apps/Offline_Service_workers
 //https://developers.google.com/web/fundamentals/primers/service-workers?hl=ja
-const cname='2310260',
+const cname='2412020',
 cstore=[
-	'util.js',
-	'img/icon.svg','img/icon_.svg','img/icon.png','img/icon192.png',
-	'img/icon/instr.svg','img/icon/info.svg','img/icon/seq.svg','img/icon/manual.svg',
-	'https://mcbeeringi.github.io/src/toggle.css',
-	'img/atlas0.svg','img/atlas1.webp','img/sel.svg',
-	'index.html',
-
-	'instr.html',
-	'audio/instr/musicbox/a3.mp3',
-	'audio/instr/musicbox/a4.mp3',
-	'audio/instr/musicbox/a5.mp3',
-	'audio/instr/musicbox/a6.mp3',
-	'audio/instr/musicbox/ds4.mp3',
-	'audio/instr/musicbox/ds5.mp3',
-	'audio/instr/musicbox/ds6.mp3',
-	'audio/instr/musicbox/ds7.mp3',
-
-	'info.html',
-	'img/tc/00.webp','img/tc/01.webp','img/tc/02.webp',
-	'img/tc/10.webp','img/tc/11.webp','img/tc/12.webp',
-	'img/tc/20.webp','img/tc/21.webp',
-	'img/tc/30.webp','img/tc/31.webp','img/tc/32.webp',
-	'img/tc/40.webp','img/tc/41.webp',
-
-	'manual.html'
+	'img/icon.svg','img/icon.png',
+	'index.html'
 ],
 cprev=[
 	'_.html'
