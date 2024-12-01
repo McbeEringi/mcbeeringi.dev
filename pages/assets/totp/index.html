@@ -38,7 +38,7 @@
 			log.textContent=JSON.stringify({
 				t:new Date,
 				w:(await Promise.all(
-					urls.value.split('\n').flatMap(x=>x.trim()&&(x=migurl(x))?x.params.map(async x=>[`${x.issuer||'(null)'}:${x.name}`,await totp(x)]):[])
+					urls.value.split('\n').flatMap(x=>x.trim()&&(x=migurl(x))?x.params.map(async x=>[await totp(x),x.issuer?`${x.issuer}:${x.name}`:x.name]):[])
 				)).reduce((a,[i,x])=>(a[i]=x,a),{})},
 				0,'\t'
 			)
