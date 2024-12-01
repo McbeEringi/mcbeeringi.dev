@@ -18,8 +18,8 @@ d=[
 
 
 Object.entries({
-	install:e=>Promise.all(d.map(async x=>x.init&&(await caches.open(x.id)).addAll(x.init))),
-	activate:async e=>await Promise.all((await caches.keys()).map(async x=>d.some(_=>_.id==x)||await caches.delete(x))),
+	install:e=>e.waitUntil(Promise.all(d.map(async x=>x.init&&(await caches.open(x.id)).addAll(x.init))),console.log('sw install',e)),
+	activate:async e=>e.waitUntil(Promise.all((await caches.keys()).map(async x=>d.some(_=>_.id==x)||await caches.delete(x))),console.log('sw activate',e)),
 	fetch:async e=>e.respondWith(await(async (r,x)=>x?(x.slice(0,6)=='bytes='&&(x=x.slice(6).split(/,\s*/)).length==1?(
 		console.log(`RANGE ${x}`),
 		x=x.split('-'),
@@ -45,7 +45,7 @@ Object.entries({
 		),
 		e.request.headers.get('range')
 	))
-}).forEach(([i,x])=>self.addEventListener(i,e=>(console.log(e),e.waitUntil(x(e)))));
+}).forEach(([i,x])=>self.addEventListener(i,x));
 
 console.log('hello from sw');
 
