@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>PetitTOTP</title>
+	<meta name="Description" content="TOTP Generator">
+	<link rel="icon" href="img/icon.png" type="image/png">
+	<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="PetitTOTP">
+	<meta property="og:description" content="TOTP Generator">
+	<meta property="og:url" content="https://mcbeeringi.dev/totp/">
+	<meta property="og:image" content="https://mcbeeringi.dev/totp/img/icon.png">
+	<link rel="apple-touch-icon" href="img/icon.png">
+	<link rel="manifest" href="mf.json">
+	<meta name="theme-color" content="#6ca8">
+	<script>
+		navigator.serviceWorker&&location.protocol.includes('http')&&addEventListener('load',async()=>console.log(
+			await navigator.serviceWorker.register('sw.js',{type:'module',updateViaCache:'none'})
+		),{once:1});
+	</script>
+	<style>
+		@media(prefers-color-scheme:dark){
+			:root{background-color:#222;color:#fff;}
+		}
+		textarea{background-color:inherit;color:inherit;width:100%;resize:none;box-sizing:border-box;}
+		pre,textarea{overflow:auto;}
+	</style>
+</head>
+<body>
+	<textarea id="urls" rows="8">otpauth-migration://offline?data=CjkKCjkWt1nRWPW%2Bd98SEGhlbGxvd29ybGQyMzQ1NjcgASgBMAJCEzlkZDNjMzE3MzI3MjAwMzcyMTIQAhgBIAA%3D
+</textarea>
+	<pre id="log"></pre>
+	<script type="module">
+		import{totp,migurl}from'https://mcbeeringi.dev/petit/totp.mjs';
+		const core=async()=>(
+			log.textContent=JSON.stringify({
+				t:new Date,
+				w:(await Promise.all(
+					urls.value.split('\n').flatMap(x=>x.trim()&&(x=migurl(x))?x.params.map(async x=>[`${x.issuer||'(null)'}:${x.name}`,await totp(x)]):[])
+				)).reduce((a,[i,x])=>(a[i]=x,a),{})},
+				0,'\t'
+			)
+		),
+		main=async()=>(await core(),setTimeout(main,1000-Date.now()%1000));
+
+		main();
+	</script>
+</body>
+</html>
