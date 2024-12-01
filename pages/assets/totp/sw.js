@@ -19,7 +19,7 @@ d=[
 
 Object.entries({
 	install:e=>Promise.all(d.map(async x=>x.init&&(await caches.open(x.id)).addAll(x.init))),
-	activate:e=>Promise.all((async()=>(await caches.keys()).map(x=>d.some(_=>_.id==x)||caches.delete(x)))()),
+	activate:async e=>await Promise.all((await caches.keys()).map(x=>d.some(_=>_.id==x)||caches.delete(x))),
 	fetch:async e=>e.respondWith((async (r,x)=>x?(x.slice(0,6)=='bytes='&&(x=x.slice(6).split(/,\s*/)).length==1?(
 		console.log(`RANGE ${x}`),
 		x=x.split('-'),
