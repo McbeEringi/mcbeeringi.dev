@@ -1,14 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 16 16" style="fill:none;stroke:#8888;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;">
 	<desc>app icon</desc>
-	<defs>
-		<linearGradient id="bg" x1="0" y1="1" x2="0" y2="0">
-			<stop offset="0" stop-color="#ccc"/><stop offset="1" stop-color="#fff"/>
-		</linearGradient>
-	</defs>
-	<path d="M0,0h16v16h-16Z" style="fill:url(#bg);stroke:none;"/>
+	<path d="M0,0h16v16h-16Z" style="fill:#fff;stroke:none;"/>
 	<g transform="translate(8,8)">
-	<path d="M0,-2m-3,0h2m2,0h2m-3,0"/>
-	<path d="M0,0m-3,0h2m2,0h2m-3,0" stroke="#6ca8"/>
-	<path d="M0,2m-3,0h2m2,0h2m-3,0"/>
+		<path d="M0,-2m-3,0h2m2,0h2m-3,0"/>
+		<path d="M0,0m-3,0h2m2,0h2m-3,0" stroke="#6ca8"/>
+		<path d="M0,2m-3,0h2m2,0h2m-3,0"/>
 	</g>
 </svg>
