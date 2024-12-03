@@ -14,7 +14,7 @@ const cfg={idir:'src',odir:'build'};
 			)([odir,x.x[0]].join('/'),{[x.x[1].slice(0,-4)]:x.w})
 		),0)
 	),
-	dev:({idir})=>Bun.serve({
+	dev:({idir},mgr)=>Bun.serve({
 		development:1,
 		fetch:async w=>(
 			Object.keys(require.cache).forEach(x=>(x.includes(import.meta.dir)&&delete require.cache[x])),
@@ -45,8 +45,11 @@ const cfg={idir:'src',odir:'build'};
 					await w.search(w.path)||await w.search(w.path+'/index')&&Response.redirect(w.path+'/')
 				)||await w.search('/404')
 			},
+			await mgr,mgr=((x,y)=>(x=new Promise(f=>y=f),x.fulfill=y,x))(),// to avoid multiple import() at same time 
 			console.log(w.req.url),
-			await w.main()
+			w=await w.main(),
+			mgr.fulfill(),
+			w
 		)
 	})
 })[Bun.argv.slice(2)[0]||'build'](cfg);
