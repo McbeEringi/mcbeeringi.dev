@@ -4,11 +4,15 @@ const
 d=[
 	{
 		id:'totp_index_2412021',
-		init:['index.html']
+		init:['./']
 	},
 	{
 		id:'totp_img_2412021',
 		init:['img/icon.svg','img/icon.png']
+	},
+	{
+		id:'totp_petit_2412021',
+		init:['https://mcbeeringi.dev/petit/protobuf.mjs','https://mcbeeringi.dev/petit/totp.mjs']
 	},
 	{
 		id:'totp_misc_0',
