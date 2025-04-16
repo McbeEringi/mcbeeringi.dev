@@ -23,20 +23,15 @@
 		...x.matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/g)
 	].reduce((a,{groups:x})=>(a[x.k]=x.k=='d'?[...x.v,0].reduce((a,x)=>(
 		/[mlhvcsqtaz]/i.test(x)||!x?(
-			a.window=[...a.window.slice(0,-1),+a.window.at(-1)].slice(1),
-			(l=>l&&a.path.push(...[...Array(Math.max(Math.ceil(a.window.length/l),1))].map((_,i)=>({
-				cmd:a.state,
-				arg:a.window.slice(i*l||0,++i*l)
-			}))))({m:2,l:2,h:1,v:1,c:6,s:4,q:4,t:2,a:7,z:Infinity}[a.state.toLowerCase()]),
-			a.state=x,a.window=[]
-		):(
-			isNaN(a.window.at(-1)+x+0)?a.window=[...a.window.slice(0,-1),+a.window.at(-1),x==','?'':x]:
-				a.window[a.window.length-1]+=x
-		),
+			a.x=[...a.x.slice(0,-1),+a.x.at(-1)].slice(1),
+			(l=>l&&a.a.push(...[...Array(Math.max(Math.ceil(a.x.length/l),1))].map((_,i)=>({
+				cmd:a.s,
+				arg:a.x.slice(i*l||0,++i*l)
+			}))))({m:2,l:2,h:1,v:1,c:6,s:4,q:4,t:2,a:7,z:1/0}[a.s.toLowerCase()]),
+			a.s=x,a.x=[]
+		):(isNaN(a.x.at(-1)+x+0)?a.x=[...a.x.slice(0,-1),+a.x.at(-1),x==','?'':x]:a.x[a.x.length-1]+=x),
 		a
-	),{window:[],state:'',path:[]}).path.slice(1):x.v,a),{}))
+	),{x:[],s:'',a:[]}).a.slice(1):x.v,a),{}))
 )=>(
-	console.log(svg),
-	console.log(css),
-	console.log(...path)
+	console.log(svg,css,...path),
 ))(await Bun.file("icon.svg").text())
