@@ -15,6 +15,7 @@ clean:
 	@echo -e "\x1b[1;32m *\x1b[0;33m clean\x1b[0;32m done\x1b[0m";
 
 copy:
+	@mkdir -p $(DSTDIR)
 	@cp -r $(SRCDIR)/* $(DSTDIR)
 	@echo -e "\x1b[1;32m *\x1b[0;33m copy\x1b[0;3m $(SRCDIR)\x1b[2m =>\x1b[0;3m $(DSTDIR)\x1b[0m";
 	@echo -e "\x1b[1;32m *\x1b[0;33m copy\x1b[0;32m done\x1b[0m";
@@ -27,7 +28,7 @@ exec:
 		cut -d' ' -f2-\
 	);do\
 		chmod +x $$x;\
-		$$x;\
+		cd $$(dirname $$x);./$$(basename $$x);cd - >/dev/null;\
 		echo -e "\x1b[1;32m *\x1b[0;33m exec\x1b[0;3m $$x\x1b[0m";\
 	done
 	@echo -e "\x1b[1;32m *\x1b[0;33m exec\x1b[0;32m done\x1b[0m";
