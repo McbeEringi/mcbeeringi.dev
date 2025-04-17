@@ -41,7 +41,6 @@ await Bun.write('icon.png',
 	console.log(svg,css,...path),
 
 	path.forEach(({fill,stroke,style,d})=>(
-		style=style.split(';').reduce((a,x)=>((x=x.trim())&&(x=x.split(':').map(x=>x.trim()),a[x[0]]=x[1]),a),{}),
 		console.log()
 	)),
 
