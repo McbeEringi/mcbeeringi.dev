@@ -27,9 +27,9 @@ exec:
 		sort -k1nr,1 -k2|\
 		cut -d' ' -f2-\
 	);do\
+		echo -e "\x1b[1;32m *\x1b[0;33m exec\x1b[0;3m $$x\x1b[0m";\
 		chmod +x $$x;\
 		cd $$(dirname $$x);./$$(basename $$x);cd - >/dev/null;\
-		echo -e "\x1b[1;32m *\x1b[0;33m exec\x1b[0;3m $$x\x1b[0m";\
 	done
 	@echo -e "\x1b[1;32m *\x1b[0;33m exec\x1b[0;32m done\x1b[0m";
 
@@ -38,7 +38,7 @@ move:
 		dir=$$(dirname $$x);\
 		base=$$(basename $$x);\
 		esc=$${base#$(ESC_PREFIX)};\
-		mv -f "$$x" "$$dir/$$esc";\
 		echo -e "\x1b[1;32m *\x1b[0;33m move\x1b[0;3m $$x\x1b[2m =>\x1b[0;3m $$dir/$$esc\x1b[0m";\
+		mv -f "$$x" "$$dir/$$esc";\
 	done
 	@echo -e "\x1b[1;32m *\x1b[0;33m move\x1b[0;32m done\x1b[0m";
