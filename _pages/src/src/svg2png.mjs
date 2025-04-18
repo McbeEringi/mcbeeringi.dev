@@ -45,6 +45,7 @@ svg2png=w=>((
 	inv=x=>x.map(x=>1/x),
 	mul=(...w)=>w.reduce((a,x)=>a.map((a,i)=>a*(x[i]??x))),
 	div=(x,...y)=>mul(x,...y.map(inv)),
+	dot=(...w)=>w[0].reduce((a,_,i)=>a+w.reduce((a,x)=>a*x[i],1),0),
 	mix=(a,b,x)=>add(mul(a,1-x),mul(b,x)),
 	rsw=(r,p,c)=>r?add(p,c):c,
 	splcnt=64
@@ -82,18 +83,26 @@ svg2png=w=>((
 				mul(add(a.p,sub(a.m.arg.slice(2,4),a.m.arg.slice(0,2))),2*t*(1-t)),
 				mul(rsw(r,a.p,x.slice(0,2)),t**2)
 			))):[[...rsw(r,a.p,x.slice(0,2))]]),a.p=rsw(r,a.p,x.slice(0,2))),
-			a:(x,r)=>((// https://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
+			a:(x,r_)=>((// https://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
+				_1=a.p,_2=rsw(r_,a.p,x.slice(5,7)),r=x.slice(0,2),fl=x[3],fs=x[4],
 				t=x[2]*Math.PI/180,ct=Math.cos(t),st=Math.sin(t),
-				_1d=(d=>[ct*d[0]+st*d[1],-st*d[0]+ct*d[1]])(div(sub(a.p,rsw(r,a.p,x.slice(5,7))),2)),
-				cd=mul(
-					[x[0]*_1d[1]/x[1],-x[1]*_1d[0]/x[0]]
-					((r,_1d)=>(x[3]!=x[4]||-1)*Math.max(((r[0]*r[1]-r[0]*_1d[1]-r[1]*_1d[0])/(r[0]*_1d[1]+r[1]*_1d[0]))**.5,0))((r=>mul(r,r))(x.slice(0,2)),mul(_1d,_1d))
+				_1d=(d=>[dot([ct,st],d),dot([-st,ct],d)])(mul(sub(_1,_2),.5)),
+				cd=(
+					(l=>1<l&&(r=mul(r,l**.5)))(_1d[0]**2/r[0]**2+_1d[1]**2/r[1]**2),
+					mul(
+						[r[0]*_1d[1]/r[1],-r[1]*_1d[0]/r[0]],
+						((r,_1d)=>(fl!=fs||-1)*Math.max((r[0]*r[1]-r[0]*_1d[1]-r[1]*_1d[0])/(r[0]*_1d[1]+r[1]*_1d[0]),0)**.5)(mul(r,r),mul(_1d,_1d))
+					)
 				),
-				c=add([ct*cd[0]-st*cd[1],st*cd[0]+ct*cd[1]],div(add(a.p,rsw(r,a.p,x.slice(5,7))),2))
-			)=>(
-				// TODO
-				a.v.at(-1).push([...(a.p=rsw(r,a.p,x.slice(5,7)))])
-			))(),
+				c=add([dot([ct,-st],cd),dot([st,ct],cd)],mul(add(_1,_2),.5)),
+				angle=(u,v)=>Math.atan2(u[0]*v[1]-u[1]*v[0],dot(u,v)),
+				t1=angle([1,0],div(sub(_1d,cd),r)),
+				dt=(t=>t+((!fs&&0<t)?-1:(fs&&t<0)?1:0)*2*Math.PI)(angle(div(sub(_1d,cd),r),div(sub(rev(_1d),cd),r)))
+			)=>a.v.at(-1).push(...[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,
+				t=t1+dt*t,
+				t=mul(r,[Math.cos(t),Math.sin(t)]),
+				add([dot([ct,-st],t),dot([st,ct],t)],c)
+			))))(),
 			z:(x,r)=>a.v.at(-1).push([...(a.p=[...a.v.at(-1)[0]]),0]),
 		}[x.cmd])(x.arg,x.rel),
 		a.m=x,
@@ -107,10 +116,7 @@ svg2png=w=>((
 		)||[0,0,0,255],
 		x.v.forEach(p=>p.reduce((p,q,_q)=>(
 			_q=q,
-			[p,q]=[p,q].map(x=>x.map((x,i)=>//Math.max(0,Math.min(
-				Math.floor((x-svg.viewBox[i])/(svg.viewBox[i+2]-svg.viewBox[i])*svg[['width','height'][i]]),
-			//svg[['width','height'][i]]-1))
-			)),
+			[p,q]=[p,q].map(x=>x.map((x,i)=>Math.floor((x-svg.viewBox[i])/(svg.viewBox[i+2]-svg.viewBox[i])*svg[['width','height'][i]]))),
 			[...Array(Math.max(Math.abs(q[0]-p[0]),Math.abs(q[1]-p[1])))].forEach((c,t,{length:l})=>(t/=l-1,isNaN(t)&&(t=0),
 				c=mix(p,q,t).map(x=>Math.floor(x)),
 				[...Array(4)].forEach((_,i)=>(
