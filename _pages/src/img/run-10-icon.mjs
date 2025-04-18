@@ -10,4 +10,3 @@ main=async n=>await Bun.write(
 
 main('icon.svg');
 main('icon_hat.svg');
-

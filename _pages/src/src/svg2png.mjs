@@ -46,7 +46,8 @@ svg2png=w=>((
 	mul=(...w)=>w.reduce((a,x)=>a.map((a,i)=>a*(x[i]??x))),
 	div=(x,...y)=>mul(x,...y.map(inv)),
 	mix=(a,b,x)=>add(mul(a,1-x),mul(b,x)),
-	rsw=(r,p,c)=>r?add(p,c):c
+	rsw=(r,p,c)=>r?add(p,c):c,
+	splcnt=64
 )=>(
 	svg.width=+svg.width,svg.height=+svg.height,
 	svg.viewBox=svg.viewBox.split(' ').map(x=>+x),
@@ -57,33 +58,42 @@ svg2png=w=>((
 			l:(x,r)=>a.v.at(-1).push([...(a.p=rsw(r,a.p,x))]),
 			h:(x,r)=>a.v.at(-1).push([...(a.p=[x[0]+(r&&a.p[0]),a.p[1]])]),
 			v:(x,r)=>a.v.at(-1).push([...(a.p=[a.p[0],x[0]+(r&&a.p[1])])]),
-			c:(x,r)=>(a.v.at(-1).push(...[...Array(16)].map((_,t,{length:l})=>(t/=l-1,add(
+			c:(x,r)=>(a.v.at(-1).push(...[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,add(
 				mul(a.p,(1-t)**3),
 				mul(rsw(r,a.p,x.slice(0,2)),3*t*(1-t)**2),
 				mul(rsw(r,a.p,x.slice(2,4)),3*t**2*(1-t)),
 				mul(rsw(r,a.p,x.slice(4,6)),t**3)
 			)))),a.p=rsw(r,a.p,x.slice(4,6))),
 			// TODO: cssssss
-			s:(x,r)=>(a.v.at(-1).push(...a.m.cmd=='c'?[...Array(16)].map((_,t,{length:l})=>(t/=l-1,add(
+			s:(x,r)=>(a.v.at(-1).push(...a.m.cmd=='c'?[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,add(
 				mul(a.p,(1-t)**3),
 				mul(add(a.p,sub(a.m.arg.slice(4,6),a.m.arg.slice(2,4))),3*t*(1-t)**2),
 				mul(rsw(r,a.p,x.slice(0,2)),3*t**2*(1-t)),
 				mul(rsw(r,a.p,x.slice(2,4)),t**3)
 			))):[[...rsw(r,a.p,x.slice(2,4))]]),a.p=rsw(r,a.p,x.slice(2,4))),
-			q:(x,r)=>(a.v.at(-1).push(...[...Array(16)].map((_,t,{length:l})=>(t/=l-1,add(
+			q:(x,r)=>(a.v.at(-1).push(...[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,add(
 				mul(a.p,(1-t)**2),
 				mul(rsw(r,a.p,x.slice(0,2)),2*t*(1-t)),
 				mul(rsw(r,a.p,x.slice(2,4)),t**2)
 			)))),a.p=rsw(r,a.p,x.slice(2,4))),
 			// TODO: qtttttt
-			t:(x,r)=>(a.v.at(-1).push(...a.m.cmd=='q'?[...Array(16)].map((_,t,{length:l})=>(t/=l-1,add(
+			t:(x,r)=>(a.v.at(-1).push(...a.m.cmd=='q'?[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,add(
 				mul(a.p,(1-t)**2),
 				mul(add(a.p,sub(a.m.arg.slice(2,4),a.m.arg.slice(0,2))),2*t*(1-t)),
 				mul(rsw(r,a.p,x.slice(0,2)),t**2)
 			))):[[...rsw(r,a.p,x.slice(0,2))]]),a.p=rsw(r,a.p,x.slice(0,2))),
-			
-			// TODO: a:(x,r)=>1,
-			a:(x,r)=>a.v.at(-1).push([...(a.p=rsw(r,a.p,x.slice(5,7)))]),
+			a:(x,r)=>((// https://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
+				t=x[2]*Math.PI/180,ct=Math.cos(t),st=Math.sin(t),
+				_1d=(d=>[ct*d[0]+st*d[1],-st*d[0]+ct*d[1]])(div(sub(a.p,rsw(r,a.p,x.slice(5,7))),2)),
+				cd=mul(
+					[x[0]*_1d[1]/x[1],-x[1]*_1d[0]/x[0]]
+					((r,_1d)=>(x[3]!=x[4]||-1)*Math.max(((r[0]*r[1]-r[0]*_1d[1]-r[1]*_1d[0])/(r[0]*_1d[1]+r[1]*_1d[0]))**.5,0))((r=>mul(r,r))(x.slice(0,2)),mul(_1d,_1d))
+				),
+				c=add([ct*cd[0]-st*cd[1],st*cd[0]+ct*cd[1]],div(add(a.p,rsw(r,a.p,x.slice(5,7))),2))
+			)=>(
+				// TODO
+				a.v.at(-1).push([...(a.p=rsw(r,a.p,x.slice(5,7)))])
+			))(),
 			z:(x,r)=>a.v.at(-1).push([...(a.p=[...a.v.at(-1)[0]]),0]),
 		}[x.cmd])(x.arg,x.rel),
 		a.m=x,
