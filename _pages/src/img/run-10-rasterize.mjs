@@ -1,8 +1,5 @@
-#!/usr/bin/env -S bun
-
-const main=async n=>await Bun.write(`${n}.png`,
-
-((
+const
+svg2png=w=>((
 	w,
 	svg=[...w.match(/<svg.*?>/s)[0].matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/g)].reduce((a,{groups:x})=>(a[x.k]=x.v,a),{}),
 	css=[...[...w.match(/(?<=<style>).+(?=<\/style>)/sg)??[]].join('')].reduce((a,x)=>(({
@@ -132,10 +129,6 @@ const main=async n=>await Bun.write(`${n}.png`,
 		0,0,0,0,73,69,78,68,174,66,96,130// IEND
 	]))()
 	
-))(await Bun.file(n).text())
+))();
 
-);
-
-main('icon.svg');
-main('icon_hat.svg');
-
+export{svg2png};
