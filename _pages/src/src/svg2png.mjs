@@ -3,7 +3,6 @@ svg2png=w=>((
 	{w:[parsed],a:flatten}=(f=>(u=>u(u))(x=>f(y=>x(x)(y))))(re=>w=>(m=>m.length?{w:(w.w=m.map(({groups:x},s)=>(s={
 		tag:x.tag,attr:[...x.kv.matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/gs)].reduce((a,{groups:x})=>(a[x.k]=x.v,a),{}),parent:w.p,ancients:{[Symbol.iterator]:(x=s)=>({next:_=>({done:!(x=x.parent),value:x})})}
 	},x.content&&(s.children=re({w:x.content,p:s,a:w.a}).w),s)),w.a.push(...w.w),w.w),a:w.a}:w)([...w.w.matchAll(/<(?<tag>\w+)(?<kv>(\s+[\w-]+=".*?")*)\s*?(>(?<content>.*?)<\/\k<tag>>|\/\s*?>)/gs)]))({w,a:[]}),
-	// svg=[...w.match(/<svg.*?>/s)[0].matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/g)].reduce((a,{groups:x})=>(a[x.k]=x.v,a),{}),
 	svg=parsed.attr,
 	css=[...flatten.filter(x=>x.tag=='style').map(x=>x.children).join('')].reduce((a,x)=>(({
 		query:_=>x=='{'?(a.t.push(a.t.at(-1)[a.x.trim()]={}),a.s='sel',a.x=''):
@@ -19,10 +18,10 @@ svg2png=w=>((
 			x==';'?(a.t.at(-2)[a.t.at(-1)]=a.x.trim(),a.t.pop(),a.s='prop',a.x=''):
 			a.x+=x
 	}[a.s])(),a),{x:'',s:'sel',t:[{}]}).t[0],
-	path=(w.match(/<path(\s+[\w-]+=".*?")*\/>/sg)??[]).map(x=>[
-		...x.matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/g)
-	].reduce((a,{groups:x})=>(a[x.k]=x.k=='d'?
-		[...x.v,0].reduce((a,x)=>(
+	path=flatten.filter(x=>x.tag=='path').map(x=>({
+		...x.attr,
+		style:x.attr.style&&(x.attr.style.split(';').reduce((a,x)=>((x=x.trim())&&(x=x.split(':').map(x=>x.trim()),a[x[0]]=x[1]),a),{})),
+		d:[...x.attr.d,0].reduce((a,x)=>(
 			/[mlhvcsqtaz]/i.test(x)||!x?(
 				a.x=[...a.x.slice(0,-1),+a.x.at(-1)].slice(1),
 				(l=>l&&a.a.push(...[...Array(Math.max(Math.ceil(a.x.length/l),1))].map((_,i)=>({
@@ -32,10 +31,8 @@ svg2png=w=>((
 				a.s=x,a.x=[]
 			):(isNaN(a.x.at(-1)+x+0)?a.x=[...a.x.slice(0,-1),+a.x.at(-1),x==','?'':x]:a.x[a.x.length-1]+=x),
 			a
-		),{x:[],s:'',a:[]}).a:x.k=='style'?
-		x.v.split(';').reduce((a,x)=>((x=x.trim())&&(x=x.split(':').map(x=>x.trim()),a[x[0]]=x[1]),a),{}):
-		x.v,
-	a),{})),
+		),{x:[],s:'',a:[]}).a
+	})),
 	hcol=w=>w&&w[0]=='#'&&(w=w.slice(1),{
 		2:_=>[...Array(3).fill(parseInt(w,16)),255],
 		3:_=>[...[...w].map((x,i)=>parseInt(x,16)*17),255],
