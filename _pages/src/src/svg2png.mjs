@@ -1,7 +1,11 @@
 const
 svg2png=w=>((
-	svg=[...w.match(/<svg.*?>/s)[0].matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/g)].reduce((a,{groups:x})=>(a[x.k]=x.v,a),{}),
-	css=[...[...w.match(/(?<=<style>).+(?=<\/style>)/sg)??[]].join('')].reduce((a,x)=>(({
+	{w:[parsed],a:flatten}=(f=>(u=>u(u))(x=>f(y=>x(x)(y))))(re=>w=>(m=>m.length?{w:(w.w=m.map(({groups:x},s)=>(s={
+		tag:x.tag,attr:[...x.kv.matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/gs)].reduce((a,{groups:x})=>(a[x.k]=x.v,a),{}),parent:w.p
+	},x.content&&(s.children=re({w:x.content,p:s,a:w.a}).w),s)),w.a.push(...w.w),w.w),a:w.a}:w)([...w.w.matchAll(/<(?<tag>\w+)(?<kv>(\s+[\w-]+=".*?")*)\s*?(>(?<content>.*?)<\/\k<tag>>|\/\s*?>)/gs)]))({w,a:[]}),
+	// svg=[...w.match(/<svg.*?>/s)[0].matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/g)].reduce((a,{groups:x})=>(a[x.k]=x.v,a),{}),
+	svg=parsed.attr,
+	css=[...flatten.filter(x=>x.tag=='style').map(x=>x.children).join('')].reduce((a,x)=>(({
 		query:_=>x=='{'?(a.t.push(a.t.at(-1)[a.x.trim()]={}),a.s='sel',a.x=''):
 			a.x+=x,
 		sel:_=>x=='}'?(a.t.pop(),a.s='query'):
