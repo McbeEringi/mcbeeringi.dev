@@ -18,7 +18,7 @@ svg2png=w=>((
 			x==';'?(a.t.at(-2)[a.t.at(-1)]=a.x.trim(),a.t.pop(),a.s='prop',a.x=''):
 			a.x+=x
 	}[a.s])(),a),{x:'',s:'sel',t:[{}]}).t[0],
-	path=flatten.filter(x=>x.tag=='path').map(x=>({
+	path=flatten.filter(x=>x.tag=='path'&&![...x.ancients].find(x=>x.tag=='clipPath')).map(x=>({
 		...x.attr,
 		style:x.attr.style&&(x.attr.style.split(';').reduce((a,x)=>((x=x.trim())&&(x=x.split(':').map(x=>x.trim()),a[x[0]]=x[1]),a),{})),
 		d:[...x.attr.d,0].reduce((a,x)=>(
