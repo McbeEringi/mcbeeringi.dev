@@ -1,7 +1,7 @@
 const
 svg2png=w=>((
 	{w:[parsed],a:flatten}=(f=>(u=>u(u))(x=>f(y=>x(x)(y))))(re=>w=>(m=>m.length?{w:(w.w=m.map(({groups:x},s)=>(s={
-		tag:x.tag,attr:[...x.kv.matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/gs)].reduce((a,{groups:x})=>(a[x.k]=x.v,a),{}),parent:w.p
+		tag:x.tag,attr:[...x.kv.matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/gs)].reduce((a,{groups:x})=>(a[x.k]=x.v,a),{}),parent:w.p,ancients:{[Symbol.iterator]:(x=s)=>({next:_=>({done:!(x=x.parent),value:x})})}
 	},x.content&&(s.children=re({w:x.content,p:s,a:w.a}).w),s)),w.a.push(...w.w),w.w),a:w.a}:w)([...w.w.matchAll(/<(?<tag>\w+)(?<kv>(\s+[\w-]+=".*?")*)\s*?(>(?<content>.*?)<\/\k<tag>>|\/\s*?>)/gs)]))({w,a:[]}),
 	// svg=[...w.match(/<svg.*?>/s)[0].matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/g)].reduce((a,{groups:x})=>(a[x.k]=x.v,a),{}),
 	svg=parsed.attr,
