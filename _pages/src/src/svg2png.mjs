@@ -1,45 +1,5 @@
 const
 svg2png=w=>((
-	{w:[parsed],a:flatten}=(f=>(u=>u(u))(x=>f(y=>x(x)(y))))(re=>w=>(m=>m.length?{w:(w.w=m.map(({groups:x},s)=>(s={
-		tag:x.tag,attr:[...x.kv.matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/gs)].reduce((a,{groups:x})=>(a[x.k]=x.v,a),{}),parent:w.p,ancients:{[Symbol.iterator]:(x=s)=>({next:_=>({done:!(x=x.parent),value:x})})}
-	},x.content&&(s.children=re({w:x.content,p:s,a:w.a}).w),s)),w.a.push(...w.w),w.w),a:w.a}:w)([...w.w.matchAll(/<(?<tag>\w+)(?<kv>(\s+[\w-]+=".*?")*)\s*?(>(?<content>.*?)<\/\k<tag>>|\/\s*?>)/gs)]))({w,a:[]}),
-	svg=parsed.attr,
-	css=[...flatten.filter(x=>x.tag=='style').map(x=>x.children).join('')].reduce((a,x)=>(({
-		query:_=>x=='{'?(a.t.push(a.t.at(-1)[a.x.trim()]={}),a.s='sel',a.x=''):
-			a.x+=x,
-		sel:_=>x=='}'?(a.t.pop(),a.s='query'):
-			x=='@'?(a.x+=x,a.s='query'):
-			x=='{'?(a.t.push(a.t.at(-1)[a.x.trim()]={}),a.s='prop',a.x=''):
-			a.x+=x,
-		prop:_=>x=='}'?(a.t.pop(),a.s='sel'):
-			x==':'?(a.t.push(a.x.trim()),a.s='val',a.x=''):
-			a.x+=x,
-		val:_=>x=='}'?(a.t.at(-2)[a.t.at(-1)]=a.x.trim(),a.t.pop(),a.s='sel',a.x=''):
-			x==';'?(a.t.at(-2)[a.t.at(-1)]=a.x.trim(),a.t.pop(),a.s='prop',a.x=''):
-			a.x+=x
-	}[a.s])(),a),{x:'',s:'sel',t:[{}]}).t[0],
-	path=flatten.filter(x=>x.tag=='path'&&![...x.ancients].find(x=>x.tag=='clipPath')).map(x=>({
-		...x.attr,
-		style:x.attr.style&&(x.attr.style.split(';').reduce((a,x)=>((x=x.trim())&&(x=x.split(':').map(x=>x.trim()),a[x[0]]=x[1]),a),{})),
-		d:[...x.attr.d,0].reduce((a,x)=>(
-			/[mlhvcsqtaz]/i.test(x)||!x?(
-				a.x=[...a.x.slice(0,-1),+a.x.at(-1)].slice(1),
-				(l=>l&&a.a.push(...[...Array(Math.max(Math.ceil(a.x.length/l),1))].map((_,i)=>({
-					cmd:a.s.toLowerCase(),rel:a.s.toLowerCase()==a.s,
-					arg:a.x.slice(i*l||0,++i*l)
-				}))))({m:2,l:2,h:1,v:1,c:6,s:4,q:4,t:2,a:7,z:1/0}[a.s.toLowerCase()]),
-				a.s=x,a.x=[]
-			):(isNaN(a.x.at(-1)+x+0)?a.x=[...a.x.slice(0,-1),+a.x.at(-1),x==','?'':x]:a.x[a.x.length-1]+=x),
-			a
-		),{x:[],s:'',a:[]}).a
-	})),
-	hcol=w=>w&&w[0]=='#'&&(w=w.slice(1),{
-		2:_=>[...Array(3).fill(parseInt(w,16)),255],
-		3:_=>[...[...w].map((x,i)=>parseInt(x,16)*17),255],
-		4:_=>[...w].map((x,i)=>parseInt(x,16)*17),
-		6:_=>[...[...Array(3)].map((_,i)=>parseInt(w.slice(i*2,++i*2),16)),255],
-		8:_=>[...Array(4)].map((_,i)=>parseInt(w.slice(i*2,++i*2),16)),
-	}[w.length]?.()),
 	rev=x=>x.map(x=>-x),
 	add=(...w)=>w.reduce((a,x)=>a.map((a,i)=>a+(x[i]??x))),
 	sub=(x,...y)=>add(x,...y.map(rev)),
@@ -49,71 +9,104 @@ svg2png=w=>((
 	dot=(...w)=>w[0].reduce((a,_,i)=>a+w.reduce((a,x)=>a*x[i],1),0),
 	mix=(a,b,x)=>add(mul(a,1-x),mul(b,x)),
 	rsw=(r,p,c)=>r?add(p,c):c,
-	splcnt=64
+	splcnt=64,
+	hcol=w=>w&&w[0]=='#'&&(w=w.slice(1),{
+		2:_=>[...Array(3).fill(parseInt(w,16)),255],
+		3:_=>[...[...w].map((x,i)=>parseInt(x,16)*17),255],
+		4:_=>[...w].map((x,i)=>parseInt(x,16)*17),
+		6:_=>[...[...Array(3)].map((_,i)=>parseInt(w.slice(i*2,++i*2),16)),255],
+		8:_=>[...Array(4)].map((_,i)=>parseInt(w.slice(i*2,++i*2),16)),
+	}[w.length]?.()),
+	{w:[parsed],a:flatten}=(f=>(u=>u(u))(x=>f(y=>x(x)(y))))(re=>w=>(m=>m.length?{w:(w.w=m.map(({groups:x},s)=>(
+		s={
+			tag:x.tag,attr:[...x.kv.matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/gs)].reduce((a,{groups:{k,v}})=>(
+				a[k]=({
+					width:_=>+v,height:_=>+v,viewBox:_=>v.split(/,?\s/).map(x=>+x),
+					style:_=>v.split(';').reduce((a,x)=>((x=x.trim())&&(x=x.split(':').map(x=>x.trim()),a[x[0]]=x[1]),a),{}),
+					d:_=>[...v,0].reduce((a,x)=>(
+						/[mlhvcsqtaz]/i.test(x)||!x?(
+							a.x=[...a.x.slice(0,-1),+a.x.at(-1)].slice(1),
+							(l=>l&&a.a.push(...[...Array(Math.max(Math.ceil(a.x.length/l),1))].map((_,i)=>({
+								cmd:a.s.toLowerCase(),rel:a.s.toLowerCase()==a.s,arg:a.x.slice(i*l||0,++i*l)
+							}))))({m:2,l:2,h:1,v:1,c:6,s:4,q:4,t:2,a:7,z:1/0}[a.s.toLowerCase()]),
+							a.s=x,a.x=[]
+						):(isNaN(a.x.at(-1)+x+0)?a.x=[...a.x.slice(0,-1),+a.x.at(-1),x==','?'':x]:a.x[a.x.length-1]+=x),
+						a
+					),{x:[],s:'',a:[]}).a
+				}[k])?.()??v,
+			a),{}),parent:w.p,ancients:{[Symbol.iterator]:(x=s)=>({next:_=>({done:!(x=x.parent),value:x})})}
+		},
+		x.tag=='style'?(s.css=[...x.content].reduce((a,x)=>(({
+			query:_=>x=='{'?(a.t.push(a.t.at(-1)[a.x.trim()]={}),a.s='sel',a.x=''):a.x+=x,
+			sel:_=>x=='}'?(a.t.pop(),a.s='query'):x=='@'?(a.x+=x,a.s='query'):x=='{'?(a.t.push(a.t.at(-1)[a.x.trim()]={}),a.s='prop',a.x=''):a.x+=x,
+			prop:_=>x=='}'?(a.t.pop(),a.s='sel'):x==':'?(a.t.push(a.x.trim()),a.s='val',a.x=''):a.x+=x,
+			val:_=>x=='}'?(a.t.at(-2)[a.t.at(-1)]=a.x.trim(),a.t.pop(),a.s='sel',a.x=''):x==';'?(a.t.at(-2)[a.t.at(-1)]=a.x.trim(),a.t.pop(),a.s='prop',a.x=''):a.x+=x
+		}[a.s])(),a),{x:'',s:'sel',t:[{}]}).t[0]):(x.content&&(s.children=re({w:x.content,p:s,a:w.a}).w)),
+		x.tag=='path'&&(s.v=s.attr.d.reduce((a,x)=>(
+			({
+				m:(x,r)=>a.v.push([[...(a.p=rsw(r,a.p,x))]]),
+				l:(x,r)=>a.v.at(-1).push([...(a.p=rsw(r,a.p,x))]),
+				h:(x,r)=>a.v.at(-1).push([...(a.p=[x[0]+(r&&a.p[0]),a.p[1]])]),
+				v:(x,r)=>a.v.at(-1).push([...(a.p=[a.p[0],x[0]+(r&&a.p[1])])]),
+				c:(x,r)=>(a.v.at(-1).push(...[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,add(
+					mul(a.p,(1-t)**3),
+					mul(rsw(r,a.p,x.slice(0,2)),3*t*(1-t)**2),
+					mul(rsw(r,a.p,x.slice(2,4)),3*t**2*(1-t)),
+					mul(rsw(r,a.p,x.slice(4,6)),t**3)
+				)))),a.p=rsw(r,a.p,x.slice(4,6))),
+				// TODO: cssssss
+				s:(x,r)=>(a.v.at(-1).push(...a.m.cmd=='c'?[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,add(
+					mul(a.p,(1-t)**3),
+					mul(add(a.p,sub(a.m.arg.slice(4,6),a.m.arg.slice(2,4))),3*t*(1-t)**2),
+					mul(rsw(r,a.p,x.slice(0,2)),3*t**2*(1-t)),
+					mul(rsw(r,a.p,x.slice(2,4)),t**3)
+				))):[[...rsw(r,a.p,x.slice(2,4))]]),a.p=rsw(r,a.p,x.slice(2,4))),
+				q:(x,r)=>(a.v.at(-1).push(...[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,add(
+					mul(a.p,(1-t)**2),
+					mul(rsw(r,a.p,x.slice(0,2)),2*t*(1-t)),
+					mul(rsw(r,a.p,x.slice(2,4)),t**2)
+				)))),a.p=rsw(r,a.p,x.slice(2,4))),
+				// TODO: qtttttt
+				t:(x,r)=>(a.v.at(-1).push(...a.m.cmd=='q'?[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,add(
+					mul(a.p,(1-t)**2),
+					mul(add(a.p,sub(a.m.arg.slice(2,4),a.m.arg.slice(0,2))),2*t*(1-t)),
+					mul(rsw(r,a.p,x.slice(0,2)),t**2)
+				))):[[...rsw(r,a.p,x.slice(0,2))]]),a.p=rsw(r,a.p,x.slice(0,2))),
+				a:(x,r_)=>((// https://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
+					_1=a.p,_2=rsw(r_,a.p,x.slice(5,7)),r=x.slice(0,2),fl=x[3],fs=x[4],
+					t=x[2]*Math.PI/180,ct=Math.cos(t),st=Math.sin(t),
+					_1d=(d=>[dot([ct,st],d),dot([-st,ct],d)])(mul(sub(_1,_2),.5)),
+					cd=(
+						(l=>1<l&&(r=mul(r,l**.5)))(_1d[0]**2/r[0]**2+_1d[1]**2/r[1]**2),
+						mul(
+							[r[0]*_1d[1]/r[1],-r[1]*_1d[0]/r[0]],
+							((r,_1d)=>(fl!=fs||-1)*Math.max((r[0]*r[1]-r[0]*_1d[1]-r[1]*_1d[0])/(r[0]*_1d[1]+r[1]*_1d[0]),0)**.5)(mul(r,r),mul(_1d,_1d))
+						)
+					),
+					c=add([dot([ct,-st],cd),dot([st,ct],cd)],mul(add(_1,_2),.5)),
+					angle=(u,v)=>Math.atan2(u[0]*v[1]-u[1]*v[0],dot(u,v)),
+					t1=angle([1,0],div(sub(_1d,cd),r)),
+					dt=(t=>t+((!fs&&0<t)?-1:(fs&&t<0)?1:0)*2*Math.PI)(angle(div(sub(_1d,cd),r),div(sub(rev(_1d),cd),r)))
+				)=>a.v.at(-1).push(...[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,
+					t=t1+dt*t,
+					t=mul(r,[Math.cos(t),Math.sin(t)]),
+					add([dot([ct,-st],t),dot([st,ct],t)],c)
+				))))(),
+				z:(x,r)=>a.v.at(-1).push([...(a.p=[...a.v.at(-1)[0]]),0]),
+			}[x.cmd])(x.arg,x.rel),
+			a.m=x,
+			a
+		),{p:[0,0],m:{},v:[[[0,0]]]}).v),
+		s
+	)),w.a.push(...w.w),w.w),a:w.a}:w)([...w.w.matchAll(/<(?<tag>\w+)(?<kv>(\s+[\w-]+=".*?")*)\s*?(>(?<content>.*?)<\/\k<tag>>|\/\s*?>)/gs)]))({w,a:[]}),
+	svg=parsed.attr
 )=>(
-	svg.width=+svg.width,svg.height=+svg.height,
-	svg.viewBox=svg.viewBox.split(' ').map(x=>+x),
 	w=[...Array(svg.height)].map(_=>[...Array(svg.width)].map(_=>[255,255,255,255])),
-	path.forEach(w=>w.v=w.d.reduce((a,x)=>(
-		({
-			m:(x,r)=>a.v.push([[...(a.p=rsw(r,a.p,x))]]),
-			l:(x,r)=>a.v.at(-1).push([...(a.p=rsw(r,a.p,x))]),
-			h:(x,r)=>a.v.at(-1).push([...(a.p=[x[0]+(r&&a.p[0]),a.p[1]])]),
-			v:(x,r)=>a.v.at(-1).push([...(a.p=[a.p[0],x[0]+(r&&a.p[1])])]),
-			c:(x,r)=>(a.v.at(-1).push(...[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,add(
-				mul(a.p,(1-t)**3),
-				mul(rsw(r,a.p,x.slice(0,2)),3*t*(1-t)**2),
-				mul(rsw(r,a.p,x.slice(2,4)),3*t**2*(1-t)),
-				mul(rsw(r,a.p,x.slice(4,6)),t**3)
-			)))),a.p=rsw(r,a.p,x.slice(4,6))),
-			// TODO: cssssss
-			s:(x,r)=>(a.v.at(-1).push(...a.m.cmd=='c'?[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,add(
-				mul(a.p,(1-t)**3),
-				mul(add(a.p,sub(a.m.arg.slice(4,6),a.m.arg.slice(2,4))),3*t*(1-t)**2),
-				mul(rsw(r,a.p,x.slice(0,2)),3*t**2*(1-t)),
-				mul(rsw(r,a.p,x.slice(2,4)),t**3)
-			))):[[...rsw(r,a.p,x.slice(2,4))]]),a.p=rsw(r,a.p,x.slice(2,4))),
-			q:(x,r)=>(a.v.at(-1).push(...[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,add(
-				mul(a.p,(1-t)**2),
-				mul(rsw(r,a.p,x.slice(0,2)),2*t*(1-t)),
-				mul(rsw(r,a.p,x.slice(2,4)),t**2)
-			)))),a.p=rsw(r,a.p,x.slice(2,4))),
-			// TODO: qtttttt
-			t:(x,r)=>(a.v.at(-1).push(...a.m.cmd=='q'?[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,add(
-				mul(a.p,(1-t)**2),
-				mul(add(a.p,sub(a.m.arg.slice(2,4),a.m.arg.slice(0,2))),2*t*(1-t)),
-				mul(rsw(r,a.p,x.slice(0,2)),t**2)
-			))):[[...rsw(r,a.p,x.slice(0,2))]]),a.p=rsw(r,a.p,x.slice(0,2))),
-			a:(x,r_)=>((// https://www.w3.org/TR/SVG/implnote.html#ArcImplementationNotes
-				_1=a.p,_2=rsw(r_,a.p,x.slice(5,7)),r=x.slice(0,2),fl=x[3],fs=x[4],
-				t=x[2]*Math.PI/180,ct=Math.cos(t),st=Math.sin(t),
-				_1d=(d=>[dot([ct,st],d),dot([-st,ct],d)])(mul(sub(_1,_2),.5)),
-				cd=(
-					(l=>1<l&&(r=mul(r,l**.5)))(_1d[0]**2/r[0]**2+_1d[1]**2/r[1]**2),
-					mul(
-						[r[0]*_1d[1]/r[1],-r[1]*_1d[0]/r[0]],
-						((r,_1d)=>(fl!=fs||-1)*Math.max((r[0]*r[1]-r[0]*_1d[1]-r[1]*_1d[0])/(r[0]*_1d[1]+r[1]*_1d[0]),0)**.5)(mul(r,r),mul(_1d,_1d))
-					)
-				),
-				c=add([dot([ct,-st],cd),dot([st,ct],cd)],mul(add(_1,_2),.5)),
-				angle=(u,v)=>Math.atan2(u[0]*v[1]-u[1]*v[0],dot(u,v)),
-				t1=angle([1,0],div(sub(_1d,cd),r)),
-				dt=(t=>t+((!fs&&0<t)?-1:(fs&&t<0)?1:0)*2*Math.PI)(angle(div(sub(_1d,cd),r),div(sub(rev(_1d),cd),r)))
-			)=>a.v.at(-1).push(...[...Array(splcnt)].map((_,t,{length:l})=>(t/=l-1,
-				t=t1+dt*t,
-				t=mul(r,[Math.cos(t),Math.sin(t)]),
-				add([dot([ct,-st],t),dot([st,ct],t)],c)
-			))))(),
-			z:(x,r)=>a.v.at(-1).push([...(a.p=[...a.v.at(-1)[0]]),0]),
-		}[x.cmd])(x.arg,x.rel),
-		a.m=x,
-		a
-	),{p:[0,0],m:{},v:[[[0,0]]]}).v),
 
-	// console.log(svg,css,...path),
-	path.forEach((x,col)=>(
-		col=hcol(x.stroke)||hcol(x.fill)||(
-			x.style&&(hcol(x.style.stroke)||hcol(x.style.fill))
+	console.log(parsed),
+	flatten.filter(x=>x.tag=='path'&&![...x.ancients].find(x=>x.tag=='clipPath')).forEach((x,col)=>(
+		col=hcol(x.attr.stroke)||hcol(x.attr.fill)||(
+			x.attr.style&&(hcol(x.attr.style.stroke)||hcol(x.attr.style.fill))
 		)||[0,0,0,255],
 		x.v.forEach(p=>p.reduce((p,q,_q)=>(
 			_q=q,
