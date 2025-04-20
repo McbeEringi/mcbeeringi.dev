@@ -103,7 +103,7 @@ svg2png=w=>((
 )=>(
 	w=[...Array(svg.height)].map(_=>[...Array(svg.width)].map(_=>[255,255,255,255])),
 
-	console.log(parsed),
+	console.log({parsed}),
 	flatten.filter(x=>x.tag=='path'&&![...x.ancients].find(x=>x.tag=='clipPath')).forEach((x,col)=>(
 		col=hcol(x.attr.stroke)||hcol(x.attr.fill)||(
 			x.attr.style&&(hcol(x.attr.style.stroke)||hcol(x.attr.style.fill))
