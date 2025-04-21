@@ -17,7 +17,7 @@ svg2png=w=>((
 		6:_=>[...[...Array(3)].map((_,i)=>parseInt(w.slice(i*2,++i*2),16)),255],
 		8:_=>[...Array(4)].map((_,i)=>parseInt(w.slice(i*2,++i*2),16)),
 	}[w.length]?.()),
-	{w:[parsed],a:flatten}=(f=>(u=>u(u))(x=>f(y=>x(x)(y))))(re=>w=>(m=>m.length?{w:(w.w=m.map(({groups:x},s)=>(
+	{w:[parsed],a:flatten}=(f=>(u=>u(u))(x=>f(y=>x(x)(y))))(re=>w=>(m=>m.length?{w:(w.w=m.reduce((a,{groups:x},i,s)=>(
 		s={
 			tag:x.tag,attr:[...x.kv.matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/gs)].reduce((a,{groups:{k,v}})=>(
 				a[k]=({
@@ -34,7 +34,9 @@ svg2png=w=>((
 						a
 					),{x:[],s:'',a:[]}).a
 				}[k])?.()??v,
-			a),{}),parent:w.p,ancients:{[Symbol.iterator]:(x=s)=>({next:_=>({done:!(x=x.parent),value:x})})}
+			a),{}),
+			parent:w.p,ancients:{[Symbol.iterator]:(x=s)=>({next:_=>({done:!(x=x.parent),value:x})})},
+			sibling:a,i,prev:_=>a[i-1],next:_=>a[i+1]
 		},
 		x.tag=='style'?(s.css=[...x.content].reduce((a,x)=>(({
 			query:_=>x=='{'?(a.t.push(a.t.at(-1)[a.x.trim()]={}),a.s='sel',a.x=''):a.x+=x,
@@ -42,7 +44,7 @@ svg2png=w=>((
 			prop:_=>x=='}'?(a.t.pop(),a.s='sel'):x==':'?(a.t.push(a.x.trim()),a.s='val',a.x=''):a.x+=x,
 			val:_=>x=='}'?(a.t.at(-2)[a.t.at(-1)]=a.x.trim(),a.t.pop(),a.s='sel',a.x=''):x==';'?(a.t.at(-2)[a.t.at(-1)]=a.x.trim(),a.t.pop(),a.s='prop',a.x=''):a.x+=x
 		}[a.s])(),a),{x:'',s:'sel',t:[{}]}).t[0]):(x.content&&(s.children=re({w:x.content,p:s,a:w.a}).w)),
-		x.tag=='path'&&(s.v=s.attr.d.reduce((a,x)=>(
+		x.tag=='path'&&(s.vert=_=>s.attr.d.reduce((a,x)=>(
 			({
 				m:(x,r)=>a.v.push([[...(a.p=rsw(r,a.p,x))]]),
 				l:(x,r)=>a.v.at(-1).push([...(a.p=rsw(r,a.p,x))]),
@@ -94,21 +96,23 @@ svg2png=w=>((
 				))))(),
 				z:(x,r)=>a.v.at(-1).push([...(a.p=[...a.v.at(-1)[0]]),0]),
 			}[x.cmd])(x.arg,x.rel),
-			a.m=x,
-			a
+			a.m=x,a
 		),{p:[0,0],m:{},v:[[[0,0]]]}).v),
-		s
-	)),w.a.push(...w.w),w.w),a:w.a}:w)([...w.w.matchAll(/<(?<tag>\w+)(?<kv>(\s+[\w-]+=".*?")*)\s*?(>(?<content>.*?)<\/\k<tag>>|\/\s*?>)/gs)]))({w,a:[]}),
-	svg=parsed.attr
+		a.push(s),a
+	),[]),w.a.push(...w.w),w.w),a:w.a}:w)([...w.w.matchAll(/<(?<tag>\w+)(?<kv>(\s+[\w-]+=".*?")*)\s*?(>(?<content>.*?)<\/\k<tag>>|\/\s*?>)/gs)]))({w,a:[]}),
+	svg=parsed.attr,
+	// TODO : return proxy
+	css=x=>[...{[Symbol.iterator]:(c=x)=>({next:_=>({done:!c,value:c&&[c,...c.sibling.slice(0,c.i).filter(x=>x.tag=='style',c=c.parent)]})})}]
 )=>(
 	w=[...Array(svg.height)].map(_=>[...Array(svg.width)].map(_=>[255,255,255,255])),
 
 	console.log({parsed}),
 	flatten.filter(x=>x.tag=='path'&&![...x.ancients].find(x=>x.tag=='clipPath')).forEach((x,col)=>(
+		console.log(css(x)),
 		col=hcol(x.attr.stroke)||hcol(x.attr.fill)||(
 			x.attr.style&&(hcol(x.attr.style.stroke)||hcol(x.attr.style.fill))
 		)||[0,0,0,255],
-		x.v.forEach(p=>p.reduce((p,q,_q)=>(
+		x.vert().forEach(p=>p.reduce((p,q,_q)=>(
 			_q=q,
 			[p,q]=[p,q].map(x=>x.map((x,i)=>Math.floor((x-svg.viewBox[i])/(svg.viewBox[i+2]-svg.viewBox[i])*svg[['width','height'][i]]))),
 			[...Array(Math.max(Math.abs(q[0]-p[0]),Math.abs(q[1]-p[1])))].forEach((c,t,{length:l})=>(t/=l-1,isNaN(t)&&(t=0),
@@ -119,8 +123,8 @@ svg2png=w=>((
 				))
 			)),
 			_q
-		)
-	)))),
+		)))
+	)),
 	
 	((
 		crc=(t=>(buf,crc=0)=>~buf.reduce((c,x)=>t[(c^x)&0xff]^(c>>>8),~crc))([...Array(256)].map((_,n)=>[...Array(8)].reduce(c=>(c&1)?0xedb88320^(c>>>1):c>>>1,n))),// https://www.rfc-editor.org/rfc/rfc1952
