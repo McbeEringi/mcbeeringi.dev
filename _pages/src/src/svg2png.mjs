@@ -101,8 +101,10 @@ svg2png=w=>((
 		a.push(s),a
 	),[]),w.a.push(...w.w),w.w),a:w.a}:w)([...w.w.matchAll(/<(?<tag>\w+)(?<kv>(\s+[\w-]+=".*?")*)\s*?(>(?<content>.*?)<\/\k<tag>>|\/\s*?>)/gs)]))({w,a:[]}),
 	svg=parsed.attr,
-	// TODO : return proxy
-	css=x=>[...{[Symbol.iterator]:(c=x)=>({next:_=>({done:!c,value:c&&[c,...c.sibling.slice(0,c.i).filter(x=>x.tag=='style',c=c.parent)]})})}]
+	css=w=>(t=>k=>t.flat().reduce((a,x)=>a||x.tag=='style'?Object.entries(x.css).reduce((a,[s,p])=>a||(
+		// TODO : selector parser
+		1
+	),0):(x.attr[k]||x.attr.style?.[k]),0))([...{[Symbol.iterator]:(c=w)=>({next:_=>({done:!c,value:c&&[c,...c.sibling.slice(0,c.i).reverse().filter(x=>x.tag=='style',c=c.parent)]})})}])
 )=>(
 	w=[...Array(svg.height)].map(_=>[...Array(svg.width)].map(_=>[255,255,255,255])),
 
