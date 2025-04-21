@@ -17,7 +17,9 @@ svg2png=w=>((
 		6:_=>[...[...Array(3)].map((_,i)=>parseInt(w.slice(i*2,++i*2),16)),255],
 		8:_=>[...Array(4)].map((_,i)=>parseInt(w.slice(i*2,++i*2),16)),
 	}[w.length]?.()),
-	{w:[parsed],a:flatten}=(f=>(u=>u(u))(x=>f(y=>x(x)(y))))(re=>w=>(m=>m.length?{w:(w.w=m.reduce((a,{groups:x},i,s)=>(
+	{w:[parsed],a:flatten}=(f=>(u=>u(u))(x=>f(y=>x(x)(y))))(re=>w=>((
+		m=[...w.w.matchAll(/<(?<tag>\w+)(?<kv>(\s+[\w-]+=".*?")*)\s*?(>(?<content>.*?)<\/\k<tag>>|\/\s*?>)/gs)]
+	)=>m.length?{w:(w.w=m.reduce((a,{groups:x},i,s)=>(
 		s={
 			tag:x.tag,attr:[...x.kv.matchAll(/(?<k>[\w-]+)="(?<v>.*?)"/gs)].reduce((a,{groups:{k,v}})=>(
 				a[k]=({
@@ -99,7 +101,7 @@ svg2png=w=>((
 			a.m=x,a
 		),{p:[0,0],m:{},v:[[[0,0]]]}).v),
 		a.push(s),a
-	),[]),w.a.push(...w.w),w.w),a:w.a}:w)([...w.w.matchAll(/<(?<tag>\w+)(?<kv>(\s+[\w-]+=".*?")*)\s*?(>(?<content>.*?)<\/\k<tag>>|\/\s*?>)/gs)]))({w,a:[]}),
+	),[]),w.a.push(...w.w),w.w),a:w.a}:w)())({w,a:[]}),
 	svg=parsed.attr,
 	css=w=>(t=>k=>t.flat().reduce((a,x)=>a||x.tag=='style'?Object.entries(x.css).reduce((a,[s,p])=>a||(
 		// TODO : selector parser
