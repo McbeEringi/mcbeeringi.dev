@@ -41,8 +41,8 @@ svg2png=w=>((
 			sibling:a,i,prev:_=>a[i-1],next:_=>a[i+1]
 		},
 		x.tag=='style'?(s.css=[...x.content].reduce((a,x)=>(({
-			query:_=>x=='{'?(a.t.push(a.t.at(-1)[a.x.trim()]={}),a.s='sel',a.x=''):a.x+=x,
-			sel:_=>x=='}'?(a.t.pop(),a.s='query'):x=='@'?(a.x+=x,a.s='query'):x=='{'?(a.t.push(a.t.at(-1)[a.x.trim()]={}),a.s='prop',a.x=''):a.x+=x,
+			query:_=>x=='{'?(a.t.push(a.t.at(-1)[a.x.trim()]={}),a.s='sel',a.x=''):x==';'?(a.t.at(-1)[a.x.trim()]=0,a.s='sel',a.x=''):a.x+=x,
+			sel:_=>x=='}'?a.t.pop():x=='@'?(a.x+=x,a.s='query'):x=='{'?(a.t.push(a.t.at(-1)[a.x.trim()]={}),a.s='prop',a.x=''):a.x+=x,
 			prop:_=>x=='}'?(a.t.pop(),a.s='sel'):x==':'?(a.t.push(a.x.trim()),a.s='val',a.x=''):a.x+=x,
 			val:_=>x=='}'?(a.t.at(-2)[a.t.at(-1)]=a.x.trim(),a.t.pop(),a.s='sel',a.x=''):x==';'?(a.t.at(-2)[a.t.at(-1)]=a.x.trim(),a.t.pop(),a.s='prop',a.x=''):a.x+=x
 		}[a.s])(),a),{x:'',s:'sel',t:[{}]}).t[0]):(x.content&&(s.children=re({w:x.content,p:s,a:w.a}).w)),
