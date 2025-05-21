@@ -9,7 +9,8 @@ svg2png=w=>((
 	dot=(...w)=>w[0].reduce((a,_,i)=>a+w.reduce((a,x)=>a*x[i],1),0),
 	mix=(a,b,x)=>add(mul(a,1-x),mul(b,x)),
 	rsw=(r,p,c)=>r?add(p,c):c,
-	splcnt=64,
+	splcnt=8,
+	scale=1,
 	hcol=w=>w&&w[0]=='#'&&(w=w.slice(1),{
 		2:_=>[...Array(3).fill(parseInt(w,16)),255],
 		3:_=>[...[...w].map((x,i)=>parseInt(x,16)*17),255],
@@ -108,31 +109,46 @@ svg2png=w=>((
 		1
 	),0):(x.attr[k]||x.attr.style?.[k]),0))([...{[Symbol.iterator]:(c=w)=>({next:_=>({done:!c,value:c&&[c,...c.sibling.slice(0,c.i).reverse().filter(x=>x.tag=='style',c=c.parent)]})})}])
 )=>(
+	svg.width*=scale,svg.height*=scale,
 	w=[...Array(svg.height)].map(_=>[...Array(svg.width)].map(_=>[255,255,255,255])),
 
 	console.log({parsed}),
 	flatten.filter(x=>x.tag=='path'&&![...x.ancients].find(x=>x.tag=='clipPath')).forEach((x,col,v2p)=>(
-		console.log(css(x)),
+		// console.log(css(x)),
 		col={
 			stroke:hcol(x.attr.stroke)||x.attr.style&&hcol(x.attr.style.stroke)||[0,0,0,255],
 			fill  :hcol(x.attr.fill  )||x.attr.style&&hcol(x.attr.style.fill  )||[0,0,0,0]
 		},
-		v2p=(x,i)=>(c=>(x-c[i].a)*c[i].b)([0,1,2].map(i=>({a:svg.viewBox[i],b:svg[['width','height'][i]]/(svg.viewBox[i+2]-svg.viewBox[i])}))),
+		v2p=(c=>(x,i)=>(x-c[i].a)*c[i].b)([0,1,2].map(i=>({a:svg.viewBox[i],b:svg[['width','height'][i]]/(svg.viewBox[i+2]-svg.viewBox[i])}))),
 
 		x.vert().forEach(p=>(
 			p=p.map(x=>x.map(v2p)),
-			(b=>(
-				b={min:b.map(x=>Math.min(...x)),max:b.map(x=>Math.max(...x))},
-				b={raw:b,round:{min:b.min.map(x=>Math.floor(x)),max:b.max.map(x=>Math.ceil(x))}},
-				[b.w,b.h]=[0,1].map(i=>Math.ceil(b.round.max[i]-b.round.min[i])),
-				[...Array(b.w*b.h)].forEach((_,i)=>(
-					i={x:b.round.min[0]+i%b.w,y:b.round.min[1]+(i/b.w|0)},
-					w[i.y]&&w[i.y][i.x]&&(w[i.y][i.x]=col.fill)
+			2<p.length&&(b=>(// fill
+				b={min:b.map(x=>Math.floor(Math.min(...x))),max:b.map(x=>Math.ceil(Math.max(...x)))},
+				[b.w,b.h]=[0,1].map(i=>Math.ceil(b.max[i]-b.min[i])),
+				p.reduce((a,w)=>(
+					a.q=w,
+					(({p:[px,py],q:[qx,qy]})=>(
+						a.r={x:y=>(y-py)/(qy-py)*(qx-px)+px,y:[Math.min(py,qy),Math.max(py,qy)]},
+						a.s=Math.sign(py-qy)
+					))(a),
+					a.s&&(console.log(...a.r.y),a.w=a.w.map((_,y)=>(y+=b.min[1],Math.floor(a.r.y[0])<=y&&y<=Math.ceil(a.r.y[1])?_.map((p,x)=>(x+=b.min[0],
+						// FIXME : stripe bug
+						p+a.s*Math.max(0,Math.min(x-a.r.x(y+.5),1))*(y==(a.r.y[0]|0)?1-a.r.y[0]%1:1)*(y==(a.r.y[1]|0)?a.r.y[1]%1:1)//Math.max(0,Math.min(y-a.r.y[0],1))*Math.max(0,Math.min(a.r.y[1]-y,1))
+					)):_))),
+					a.p=a.q,a
+				),{p:p.at(-1),w:[...Array(b.h)].map(_=>Array(b.w).fill(0))}).w.forEach((_,y)=>(
+					_.forEach((s,x)=>(
+						w[y+b.min[1]][x+b.min[0]]=mix(
+							w[y+b.min[1]][x+b.min[0]],
+							col.fill,
+							s//Math.max(0,Math.min(s,1))
+						).map(x=>Math.max(0,Math.min(x|0,255)))
+					))
 				))
 			))([0,1].map(i=>p.map(x=>x[i]))),
-			p.map(x=>x.map(x=>Math.floor(x))).reduce((p,q,_q)=>(
+			p.map(x=>x.map(x=>Math.floor(x))).reduce((p,q,_q)=>(// stroke
 				_q=q,
-				//[p,q]=[p,q].map(v2p),
 				[...Array(Math.max(Math.abs(q[0]-p[0]),Math.abs(q[1]-p[1])))].forEach((c,t,{length:l})=>(t/=l-1,isNaN(t)&&(t=0),
 					c=mix(p,q,t).map(x=>Math.floor(x)),
 					[...Array(4)].forEach((_,i)=>(
