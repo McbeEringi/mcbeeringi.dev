@@ -111,23 +111,38 @@ svg2png=w=>((
 	w=[...Array(svg.height)].map(_=>[...Array(svg.width)].map(_=>[255,255,255,255])),
 
 	console.log({parsed}),
-	flatten.filter(x=>x.tag=='path'&&![...x.ancients].find(x=>x.tag=='clipPath')).forEach((x,col)=>(
+	flatten.filter(x=>x.tag=='path'&&![...x.ancients].find(x=>x.tag=='clipPath')).forEach((x,col,v2p)=>(
 		console.log(css(x)),
-		col=hcol(x.attr.stroke)||hcol(x.attr.fill)||(
-			x.attr.style&&(hcol(x.attr.style.stroke)||hcol(x.attr.style.fill))
-		)||[0,0,0,255],
-		x.vert().forEach(p=>p.reduce((p,q,_q)=>(
-			_q=q,
-			[p,q]=[p,q].map(x=>x.map((x,i)=>Math.floor((x-svg.viewBox[i])/(svg.viewBox[i+2]-svg.viewBox[i])*svg[['width','height'][i]]))),
-			[...Array(Math.max(Math.abs(q[0]-p[0]),Math.abs(q[1]-p[1])))].forEach((c,t,{length:l})=>(t/=l-1,isNaN(t)&&(t=0),
-				c=mix(p,q,t).map(x=>Math.floor(x)),
-				[...Array(4)].forEach((_,i)=>(
-					_=[c[0]-(i&1),c[1]-(i>>1)],
-					w[_[1]]&&w[_[1]][_[0]]&&(w[_[1]][_[0]]=col)
+		col={
+			stroke:hcol(x.attr.stroke)||x.attr.style&&hcol(x.attr.style.stroke)||[0,0,0,255],
+			fill  :hcol(x.attr.fill  )||x.attr.style&&hcol(x.attr.style.fill  )||[0,0,0,0]
+		},
+		v2p=(x,i)=>(c=>(x-c[i].a)*c[i].b)([0,1,2].map(i=>({a:svg.viewBox[i],b:svg[['width','height'][i]]/(svg.viewBox[i+2]-svg.viewBox[i])}))),
+
+		x.vert().forEach(p=>(
+			p=p.map(x=>x.map(v2p)),
+			(b=>(
+				b={min:b.map(x=>Math.min(...x)),max:b.map(x=>Math.max(...x))},
+				b={raw:b,round:{min:b.min.map(x=>Math.floor(x)),max:b.max.map(x=>Math.ceil(x))}},
+				[b.w,b.h]=[0,1].map(i=>Math.ceil(b.round.max[i]-b.round.min[i])),
+				[...Array(b.w*b.h)].forEach((_,i)=>(
+					i={x:b.round.min[0]+i%b.w,y:b.round.min[1]+(i/b.w|0)},
+					w[i.y]&&w[i.y][i.x]&&(w[i.y][i.x]=col.fill)
 				))
-			)),
-			_q
-		)))
+			))([0,1].map(i=>p.map(x=>x[i]))),
+			p.map(x=>x.map(x=>Math.floor(x))).reduce((p,q,_q)=>(
+				_q=q,
+				//[p,q]=[p,q].map(v2p),
+				[...Array(Math.max(Math.abs(q[0]-p[0]),Math.abs(q[1]-p[1])))].forEach((c,t,{length:l})=>(t/=l-1,isNaN(t)&&(t=0),
+					c=mix(p,q,t).map(x=>Math.floor(x)),
+					[...Array(4)].forEach((_,i)=>(
+						i={x:c[0]-(i&1),y:c[1]-(i>>1)},
+						w[i.y]&&w[i.y][i.x]&&(w[i.y][i.x]=col.stroke)
+					))
+				)),
+				_q
+			))
+		))
 	)),
 	
 	((
