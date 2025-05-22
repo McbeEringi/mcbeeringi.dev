@@ -132,13 +132,13 @@ svg2png=w=>((
 						a.r={x:y=>(y-py)/(qy-py)*(qx-px)+px,y:[Math.min(py,qy),Math.max(py,qy)]},
 						a.s=Math.sign(py-qy)
 					))(a),
-					a.s&&(console.log(...a.r.y),a.w=a.w.map((_,y)=>(y+=b.min[1],Math.floor(a.r.y[0])<=y&&y<=Math.ceil(a.r.y[1])?_.map((p,x)=>(x+=b.min[0],
-						// FIXME : stripe bug
-						p+a.s*Math.max(0,Math.min(x-a.r.x(y+.5),1))*(y==(a.r.y[0]|0)?1-a.r.y[0]%1:1)*(y==(a.r.y[1]|0)?a.r.y[1]%1:1)//Math.max(0,Math.min(y-a.r.y[0],1))*Math.max(0,Math.min(a.r.y[1]-y,1))
+					a.s&&(a.w=a.w.map((_,y)=>(y+=b.min[1],Math.floor(a.r.y[0])<=y&&y<=Math.ceil(a.r.y[1])?_.map((p,x)=>(x+=b.min[0],
+						// FIXME : stripe bug | clipped y
+						p+a.s*Math.max(0,Math.min(x-a.r.x(y+.5),1))*(y==(a.r.y[0]|0)?0:1)*(y==(a.r.y[1]+1|0)?0:1)
 					)):_))),
 					a.p=a.q,a
 				),{p:p.at(-1),w:[...Array(b.h)].map(_=>Array(b.w).fill(0))}).w.forEach((_,y)=>(
-					_.forEach((s,x)=>(
+					_.forEach((s,x)=>col.fill[3]&&(
 						w[y+b.min[1]][x+b.min[0]]=mix(
 							w[y+b.min[1]][x+b.min[0]],
 							col.fill,
