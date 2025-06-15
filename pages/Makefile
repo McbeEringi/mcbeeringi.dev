@@ -23,15 +23,15 @@ copy:
 exec:
 	@find "$(DSTDIR)" -type f -name "$(RUN_PREFIX)*" -print0|\
 		while IFS= read -r -d '' x;do\
-			d=$$(awk -F'/' '{print NF}' <<< "$$x"); \
-			printf "%s\t%s\n" "$$d" "$$x"; \
+			d=$$(awk -F'/' '{print NF}'<<<"$$x");\
+			printf "%s\t%s\n" "$$d" "$$x";\
 		done|\
 		sort -k1,1nr -k2|\
 		cut -f2-|\
 		while IFS= read -r x;do\
-			echo -e "\x1b[1;32m *\x1b[0;33m exec\x1b[0;3m $$x\x1b[0m"; \
-			chmod +x "$$x"; \
-			(cd "$$(dirname "$$x")" && "./$$(basename "$$x")"); \
+			echo -e "\x1b[1;32m *\x1b[0;33m exec\x1b[0;3m $$x\x1b[0m";\
+			chmod +x "$$x";\
+			(cd "$$(dirname "$$x")"&&"./$$(basename "$$x")");\
 		done
 	@echo -e "\x1b[1;32m *\x1b[0;33m exec\x1b[0;32m done\x1b[0m";
 
