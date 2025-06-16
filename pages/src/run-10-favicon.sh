@@ -1,2 +1,2 @@
 #!/bin/bash
-cp img/icon.png favicon.ico
+ln -sf img/icon.png favicon.ico
