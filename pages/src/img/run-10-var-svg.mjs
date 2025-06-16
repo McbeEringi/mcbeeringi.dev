@@ -7,3 +7,4 @@ tr=w=>w.replace(/.*?<path.+?\/>\n/,'');
 await Bun.write('icon!.svg',wi);
 await Bun.write('icon_.svg',tr(w));
 await Bun.write('icon!_.svg',tr(wi));
+await Bun.write('icon+_.svg',tr(await Bun.file('icon+.svg').text()));

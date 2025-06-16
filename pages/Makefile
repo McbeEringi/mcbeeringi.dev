@@ -21,7 +21,7 @@ copy:
 	@echo -e "\x1b[1;32m *\x1b[0;33m copy\x1b[0;32m done\x1b[0m";
 
 exec:
-	@find "$(DSTDIR)" -type f -name "$(RUN_PREFIX)*" -print0|\
+	@find "$(DSTDIR)" -type f,l -name "$(RUN_PREFIX)*" -print0|\
 		while IFS= read -r -d '' x;do\
 			d=$$(awk -F'/' '{print NF}'<<<"$$x");\
 			printf "%s\t%s\n" "$$d" "$$x";\
@@ -36,7 +36,7 @@ exec:
 	@echo -e "\x1b[1;32m *\x1b[0;33m exec\x1b[0;32m done\x1b[0m";
 
 move:
-	@find "$(DSTDIR)" -type f -name "$(ESC_PREFIX)*" -print0|while IFS= read -r -d '' x;do\
+	@find "$(DSTDIR)" -type f,l -name "$(ESC_PREFIX)*" -print0|while IFS= read -r -d '' x;do\
 		dir="$$(dirname "$$x")";\
 		base="$$(basename "$$x")";\
 		esc="$${base#$(ESC_PREFIX)}";\
