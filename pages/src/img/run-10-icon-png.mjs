@@ -24,7 +24,7 @@ blend=(b,a,x)=>(
 ),
 png=async({fg=0x000000ff,bg=0xffffffff}={})=>(
 	fg=[fg,0x66ccaa80,0x88888880],
-	new Blob(unpng(await Bun.file('_icon.png').bytes()).flatMap(x=>(
+	new Blob(unpng(await Bun.file('icon.png').bytes()).flatMap(x=>(
 		x.name=='PLTE'?
 			plte_trns([
 				bg,
@@ -34,7 +34,6 @@ png=async({fg=0x000000ff,bg=0xffffffff}={})=>(
 	)),{type:'image/png'})
 );
 
-await Bun.write('icon.png',await png());
 await Bun.write('icon!.png',await png({fg:0xffffffff,bg:0x222222ff}));
 await Bun.write('icon_.png',await png({bg:0}));
 await Bun.write('icon!_.png',await png({fg:0xffffffff,bg:0}));
