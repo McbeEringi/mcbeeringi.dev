@@ -5,6 +5,5 @@ Bun.serve({
 		url:req.url,
 		headers:req.headers,
 		body:req.body&&await req.body.text()
-	},0,'\t')],{type:'application/json'}))
-;},
+	},0,'\t')],{type:'application/json'}));},
 });
