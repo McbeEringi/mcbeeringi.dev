@@ -1,0 +1,10 @@
+[Unit]
+Description=mcbeeringi.dev
+After=network.target
+[Service]
+Type=simple
+WorkingDirectory=PWD
+ExecStart=/usr/bin/bun run PWD/main.mjs
+Restart=always
+[Install]
+WantedBy=default.target

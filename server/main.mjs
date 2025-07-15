@@ -1,4 +1,5 @@
 Bun.serve({
+	port:8001,
 	async fetch(req){return new Response(new Blob([JSON.stringify({
 		method:req.method,
 		url:req.url,
