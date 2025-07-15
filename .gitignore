@@ -1,2 +1,3 @@
 pages/node_modules/
 pages/dst/
+pages/.**/
