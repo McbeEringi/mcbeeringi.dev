@@ -10,6 +10,12 @@
 		"command":"make",
 		"watch_dir":"src"
 	},
+	"routes": [
+		{
+			"pattern": "pages.mcbeeringi.dev",
+			"custom_domain": true
+		}
+	],
 	"assets": {
 		"directory": "./dst"
 	},
