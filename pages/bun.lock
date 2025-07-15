@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "pages",
+      "name": "mcbeeringi-dev",
       "devDependencies": {
         "wrangler": "^4.24.3",
       },
