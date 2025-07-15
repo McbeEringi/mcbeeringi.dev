@@ -1,15 +1,16 @@
 PWD:=$(shell pwd)
+NAME:=mcbeeringi-dev
 run:chmod
 	./main.mjs
 chmod:
 	chmod +x ./main.mjs
 restart:
-	systemctl --user restart mcbeeringi-dev
+	systemctl --user restart $(NAME)
 install:chmod
-	sed "s|PWD|$(PWD)/|g" mcbeeringi-dev.service>~/.config/systemd/user/mcbeeringi-dev.service
+	sed "s|PWD|$(PWD)/|g" $(NAME).service>~/.config/systemd/user/$(NAME).service
 	loginctl enable-linger
-	systemctl --user enable --now mcbeeringi-dev
+	systemctl --user enable --now $(NAME)
 uninstall:
-	systemctl --user disable --now mcbeeringi-dev
+	systemctl --user disable --now $(NAME)
 	loginctl disable-linger
-	rm ~/.config/systemd/user/mcbeeringi-dev.service
+	rm ~/.config/systemd/user/$(NAME).service
