@@ -2,7 +2,6 @@
 <html>
 <head>
 	<title>絶対触れるな!</title>
-	<link rel="stylesheet" href="src/style.css">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&display=swap" rel="stylesheet">
@@ -18,8 +17,8 @@
 		.shadow{-webkit-text-fill-color:var(--col);-webkit-text-stroke:.02em #fff;text-shadow:.05em .05em 0 #0008;}
 		.r1{--col:#444;font-size:40px;font-weight:900;}
 		.r2{display:inline-block;font-size:44px;font-weight:700;position:relative;}
-		.r2>:nth-child(1){color:#0000;position:relative;display:inline-block;z-index:1;background:linear-gradient(0,#67c,#028);background-clip:text;}
-		.r2>:nth-child(2){color:#0000;position:absolute;bottom:0;left:0;transform:scaleY(-1)translateY(.6em);transform-origin:bottom;background:linear-gradient(0,#67c,#0000 43%);background-clip:text;pointer-events:none;}
+		.r2>:nth-child(1){color:#0000;position:relative;display:inline-block;background:linear-gradient(0,#67c,#028);background-clip:text;}
+		.r2>:nth-child(2){color:#0000;position:absolute;bottom:0;left:0;z-index:-1;transform:scaleY(-1)translateY(.6em);transform-origin:bottom;background:linear-gradient(0,#67c,#fff 43%);background-clip:text;pointer-events:none;}
 		.r3{--col:#626;font-size:40px;font-weight:900;}
 		.r4{--col:#e70;font-size:32px;font-weight:700;}
 
