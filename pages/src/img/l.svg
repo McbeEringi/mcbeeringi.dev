@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="3.5in" height="5in" viewBox="0 0 35 49" style="background-color:#ccc">
+<!-- 3.5in x 5in -->
+<svg xmlns="http://www.w3.org/2000/svg" width="14in" height="20in" viewBox="0 0 35 49" style="background-color:#ccc">
 	<desc>5x7 icons</desc>
 	<defs>
 		<clipPath id="clip"><circle cx="3.5" cy="3.5" r="3.5" id="circle" fill="none"/></clipPath>
