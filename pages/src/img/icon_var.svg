@@ -18,21 +18,35 @@
 			<path fill="#888" class="f" d="M54,24c0-7-23,0-23,0"/>
 			<path fill="none" class="s" d="M9,35c-17-3,5-10,23-11s39,0,24,6m-48-2c1-26,44-25,46-4m-45,0c0,0,14-7,44-4"/>
 		</g>
+		<g id="_lease">
+			<path fill="none" class="s" d="M0,24h64"/>
+		</g>
+		<g id="_ear"></g>
 	</defs>
 	<g>
 		<use href="#_bg"/>
 		<a href="#default"><text>default</text></a>
 		<a href="#hat"><text y="8">hat</text></a>
+		<!-- <a href="#lease"><text y="16">lease</text></a> -->
+		<!-- <a href="#ear"><text y="16">ear</text></a> -->
 	</g>
-	<view id="default" viewBox="64 0 64 64" />
+	<view id="default" viewBox="64 0 64 64"/>
 	<g transform="translate(64 0)">
-		<use href="#_bg"/>
-		<use href="#_icon"/>
+		<use href="#_bg"/><use href="#_icon"/>
 	</g>
-	<view id="hat" viewBox="128 0 64 64" />
+	<view id="hat" viewBox="128 0 64 64"/>
 	<g transform="translate(128 0)">
-		<use href="#_bg"/>
-		<use href="#_icon" clip-path="url(#_hat-clip)"/>
+		<use href="#_bg"/><use href="#_icon" clip-path="url(#_hat-clip)"/>
 		<use href="#_hat"/>
+	</g>
+	<view id="lease" viewBox="192 0 64 64"/>
+	<g transform="translate(192 0)">
+		<use href="#_bg"/><use href="#_icon"/>
+		<use href="#_lease"/>
+	</g>
+	<view id="ear" viewBox="256 0 64 64"/>
+	<g transform="translate(256 0)">
+		<use href="#_bg"/><use href="#_icon"/>
+		<use href="#_ear"/>
 	</g>
 </svg>
