@@ -1,34 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1050" height="1483.057" viewBox="0 0 1050 1483.057">
+<svg xmlns="http://www.w3.org/2000/svg" width="3.5in" height="5in" viewBox="0 0 35 49" style="background-color:#ccc">
 	<desc>5x7 icons</desc>
-	<g>
-		<image href="icon.svg" width="210" height="210" id="icon"/>
-		<circle cx="105" cy="105" r="105" id="circle" style="fill:none;stroke:#ccc;stroke-width:4;"/>
-		<clipPath id="clip"><use href="#circle"/></clipPath>
-		<g id="grid">
-			<use href="#icon" clip-path="url(#clip)"/>
-			<use href="#circle"/>
-		</g>
+	<defs>
+		<clipPath id="clip"><circle cx="3.5" cy="3.5" r="3.5" id="circle" fill="none"/></clipPath>
+		<image href="icon.svg" width="7" height="7" id="icon" clip-path="url(#clip)"/>
 		<g id="row">
-			<use href="#grid"/>
-			<use href="#grid" x="210"/>
-			<use href="#grid" x="420"/>
-			<use href="#grid" x="630"/>
-			<use href="#grid" x="840"/>
-			<!-- <use href="#grid" y="181.865" x="105"/>
-			<use href="#grid" y="181.865" x="315"/>
-			<use href="#grid" y="181.865" x="525"/>
-			<use href="#grid" y="181.865" x="735"/> -->
+			<use href="#icon"/>
+			<use href="#icon" x="7"/>
+			<use href="#icon" x="14"/>
+			<use href="#icon" x="21"/>
+			<use href="#icon" x="28"/>
 		</g>
-	</g>
-	<rect width="100%" height="100%" fill="#fff"/>
+	</defs>
 	<use href="#row"/>
-	<!-- <use href="#row" y="363.731"/>
-	<use href="#row" y="727.461"/>
-	<use href="#row" y="1091.192"/> -->
-	<use href="#row" y="210"/>
-	<use href="#row" y="420"/>
-	<use href="#row" y="630"/>
-	<use href="#row" y="840"/>
-	<use href="#row" y="1050"/>
-	<use href="#row" y="1260"/>
+	<use href="#row" y="7"/>
+	<use href="#row" y="14"/>
+	<use href="#row" y="21"/>
+	<use href="#row" y="28"/>
+	<use href="#row" y="35"/>
+	<use href="#row" y="42"/>
 </svg>
