@@ -3,7 +3,7 @@
 	"name": "mcbeeringi-dev",
 	"compatibility_date": "2026-02-18",
 	// "build":{"command":"bun build.mjs","watch_dir":["src","build.mjs"]},
-	"routes":[{"pattern":"pages.mcbeeringi.dev","custom_domain":true}],
+	"routes":[{"pattern":"mcbeeringi.dev","custom_domain":true}],
 	"assets":{"directory":"./root"},
 	"observability":{"enabled":true}
 }
