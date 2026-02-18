@@ -1,0 +1,18 @@
+:root{
+	--k:#223;--w:#ffd;
+	--bc:var(--w);--fc:var(--k);--bor:max(2px,.2em);
+	color:var(--fc);background:0 0/5cm url("../img/cross.svg") var(--bc);
+}
+@media(prefers-color-scheme:dark){
+	:root{--bc:var(--k);--fc:var(--w);}
+	:link{color:#8cf;}:visited{color:#c8f;}:link:active,:visited:active{color:#f8c;}
+}
+
+hr{border:2px solid #aaa;border-radius:2px;}
+
+.box{
+	padding:16px;
+	display:inline-block;
+	border-radius:8px;
+	background-color:#f444;
+}

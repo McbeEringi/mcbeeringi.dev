@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<defs>
+	<style>path{stroke:#aaa;shape-rendering:crispEdges;}</style>
+	<rect id="b" width="100" height="100"/>
+	<pattern id="g0" patternUnits="userSpaceOnUse" width="10" height="10">
+		<path d="M4,5h2M5,4v2" stroke-width="0.5"/>
+	</pattern>
+	<pattern id="g1" patternUnits="userSpaceOnUse" width="100" height="100">
+		<path d="M2,5h6M5,2v6" stroke-width="1.5"/>
+	</pattern>
+</defs>
+<g opacity=".5">
+	<use href="#b" fill="url(#g0)"/>
+	<use href="#b" fill="url(#g1)"/>
+</g>
+</svg>
