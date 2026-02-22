@@ -7,20 +7,28 @@
 	<meta name="description" content="Not Found">
 
 	<link rel="stylesheet" href="/src/style.css">
+<style>
+body{margin:0;image-rendering:pixelated;}
+</style>
 </head>
 <body>
-	<noscript>
+	<canvas id="c">
 		<h1>404</h1>
 		<h2>Not Found</h2>
 		<a href="/">Back to Top</a>
-	<noscript>
+	</canvas>
 	<script type="module">
 		import Matter from'https://esm.run/matter-js'
 		self.Matter=Matter;
 		const
 		{Engine,Render,Runner,Bodies,Composite,Mouse,MouseConstraint}=Matter,
 		engine=Engine.create(),
-		render=Render.create({element:document.body,engine}),
+		render=Render.create({canvas:c,engine,options:{
+			width: document.documentElement.clientWidth,
+			height:document.documentElement.clientHeight,
+			wireframes:false,background:'#0000'
+		}}),
+
 		mouse=Mouse.create(render.canvas);
 		Composite.add(engine.world,[
 			Bodies.rectangle(400, 200, 80, 80),
