@@ -21,25 +21,76 @@ body{margin:0;image-rendering:pixelated;}
 		import Matter from'https://esm.run/matter-js'
 		self.Matter=Matter;
 		const
-		{Engine,Render,Runner,Bodies,Composite,Mouse,MouseConstraint}=Matter,
-		engine=Engine.create(),
+		{Engine,Render,Runner,Bodies,Composite,Mouse,MouseConstraint,Constraint,Events,Body,Vector}=Matter,
+		engine=Engine.create({enableSleeping:false}),
 		render=Render.create({canvas:c,engine,options:{
 			width: document.documentElement.clientWidth,
 			height:document.documentElement.clientHeight,
-			wireframes:false,background:'#0000'
+			wireframes:false,background:'#0000',
+			showAngleIndicator: true
 		}}),
+		opt={friction:3,frictionStatic:5,density:0.2},
+		anchor = Vector.create(200, render.options.height-300),
+		get_rock=_=>Bodies.circle(anchor.x, anchor.y, 20,{...opt,density:1,collisionFilter:{category:1,group:0,mask:2},rock:1});
+		let rock=get_rock();
+		const
+		elastic = Constraint.create({
+				pointA: anchor, 
+				bodyB: rock,
+				length: 0.01,
+				damping: 0.01,
+				stiffness: 0.05
+		}),
+		mouse=MouseConstraint.create(engine,{
+			mouse:Mouse.create(render.canvas),
+			constraint:{render:{visible:false}},
+			collisionFilter:{category:2}
+		}),
+		g_lv=render.options.height-100,
+		gnd=Bodies.rectangle(render.options.width/2,(render.options.height+g_lv)/2,render.options.width,render.options.height-g_lv, { isStatic: true ,...opt}),
+		struct=((
+			f=p=>({
+				c:(x,y)=>Bodies.rectangle(p.x+x*50,p.y-25-y*50,50,50,opt),
+				s:(x,y,o)=>Bodies.rectangle(p.x+x*50,p.y-25-y*50,250,10,{...opt,...o})
+			})
+		)=>({
+		four:p=>(({c,s}=f(p))=>[
+			c(3,0),c(3,1),c(3,2),
+			s(3,3),
+			s(2,5,{angle:-Math.PI/3.3}),
+			c(3.2,3.2),c(3.2,4.2),c(3.2,5.2),
+		])(),
+		zero:p=>(({c,s}=f(p))=>[
+			c(0,0),c(1,0),c(2,0),c(3,0),
+			c(0,1),c(0,2),c(0,3),c(0,4),
+			c(3,1),c(3,2),c(3,3),c(3,4),
+			s(1.5,5),
+			c(0,5.2),c(1,5.2),c(2,5.2),c(3,5.2),
+		])(),
+		}))();
+		console.log(gnd.collisionFilter);
 
-		mouse=Mouse.create(render.canvas);
 		Composite.add(engine.world,[
-			Bodies.rectangle(400, 200, 80, 80),
-			Bodies.rectangle(450, 50, 80, 80),
-			Bodies.rectangle(400, 610, 810, 60, { isStatic: true })
-		]);
-
-		Composite.add(engine.world,MouseConstraint.create(engine,{
+			gnd,
+			...struct.four(Vector.create(render.options.width/2-300,g_lv)),
+			...struct.zero(Vector.create(render.options.width/2,g_lv)),
+			...struct.four(Vector.create(render.options.width/2+200,g_lv)),
 			mouse,
-			constraint:{render:{visible:false}}
-		}));
+			rock,elastic
+		]);
+		Events.on(engine, 'afterUpdate', _=>(
+			!~mouse.mouse.button && 
+			rock && 5<Body.getSpeed(rock)
+		) && (
+			rock.collisionFilter.mask=-1>>>0,
+
+			Composite.add(engine.world,rock=get_rock()),
+			elastic.bodyB=rock
+		));
+		Events.on(engine,'collisionActive',({pairs:p})=>p.forEach(x=>[x.bodyA,x.bodyB].forEach(x=>x.rock&&(
+			x.rock=0,
+			setTimeout(_=>Composite.remove(engine.world,x),5000)
+		))));
 		render.mouse=mouse;
 		Render.run(render);
 		Runner.run(Runner.create(),engine);
