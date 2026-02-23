@@ -26,6 +26,7 @@ body{margin:0;image-rendering:pixelated;}
 		render=Render.create({canvas:c,engine,options:{
 			width: document.documentElement.clientWidth,
 			height:document.documentElement.clientHeight,
+			pixelRatio:devicePixelRatio,
 			wireframes:false,background:'#0000',
 			showAngleIndicator: true
 		}}),
