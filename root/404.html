@@ -31,14 +31,14 @@ body{margin:0;image-rendering:pixelated;}
 		}}),
 		opt={friction:3,frictionStatic:5,density:0.2},
 		anchor = Vector.create(200, render.options.height-300),
-		get_rock=_=>Bodies.circle(anchor.x, anchor.y, 20,{...opt,density:1,collisionFilter:{category:1,group:0,mask:2},rock:1});
+		get_rock=_=>Bodies.polygon(anchor.x, anchor.y, 8,20,{...opt,density:1,collisionFilter:{category:1,group:0,mask:2},rock:1});
 		let rock=get_rock();
 		const
 		elastic = Constraint.create({
 				pointA: anchor, 
 				bodyB: rock,
-				length: 0.01,
-				damping: 0.01,
+				length: 0,
+				damping: 0,
 				stiffness: 0.05
 		}),
 		mouse=MouseConstraint.create(engine,{
@@ -68,7 +68,6 @@ body{margin:0;image-rendering:pixelated;}
 			c(0,5.2),c(1,5.2),c(2,5.2),c(3,5.2),
 		])(),
 		}))();
-		console.log(gnd.collisionFilter);
 
 		Composite.add(engine.world,[
 			gnd,
@@ -78,15 +77,13 @@ body{margin:0;image-rendering:pixelated;}
 			mouse,
 			rock,elastic
 		]);
-		Events.on(engine, 'afterUpdate', _=>(
-			!~mouse.mouse.button && 
-			rock && 5<Body.getSpeed(rock)
-		) && (
+		Events.on(engine,'afterUpdate',_=>!~mouse.mouse.button ?
+		(rock && 10<Body.getSpeed(rock)) && (
 			rock.collisionFilter.mask=-1>>>0,
 
 			Composite.add(engine.world,rock=get_rock()),
 			elastic.bodyB=rock
-		));
+		):Body.setSpeed(rock,0));
 		Events.on(engine,'collisionActive',({pairs:p})=>p.forEach(x=>[x.bodyA,x.bodyB].forEach(x=>x.rock&&(
 			x.rock=0,
 			setTimeout(_=>Composite.remove(engine.world,x),5000)
