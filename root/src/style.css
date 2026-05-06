@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap');
 :root{
 	--k:#223;--w:#ffd;--s:#aaac;
-	--r:#c84;--g:#8c4;--b:#48c;--y:#aa4;
-	--ac:#6ca;
+	--ac0:#6ca;--ac1:#6be;--ac2:#baf;--ac3:#e9b;--ac4:#e97;--ac5:#bb6;
+	--ac:var(--ac0);
 	--bor:max(2px,.2em);
 	--iconl:url("https://mcbeeringi.dev/img/icon.svg");
 	--icond:url("https://mcbeeringi.dev/img/icon.svg#!");
@@ -10,7 +10,7 @@
 	--bc:var(--w);--fc:var(--k);--iimg:var(--iconl);
 	color:var(--fc);background:0 0/5cm url("../img/cross.svg") var(--bc);
 	font-family:"Zen Maru Gothic",sans-serif;
-	text-shadow:0 0 var(--bor) var(--bc);
+	text-shadow:0 0 var(--bor) var(--bc),0 0 var(--bor) var(--bc);
 }
 @media(prefers-color-scheme:dark){
 	:root{--bc:var(--k);--fc:var(--w);--iimg:var(--icond);}
@@ -42,8 +42,8 @@ hr{border:2px solid var(--s);border-radius:2px;}
 	box-shadow:0 0 0 var(--bor) var(--s) inset;
 	padding:8px;
 	border-radius:16px;
-	transition:background-color .2s,transform .5s var(--tf);
-	animation:s9 .5s var(--tf);
+	transition:background-color .2s,transform .3s var(--tf);
+	animation:s9 .3s var(--tf);
 	outline:none;
 }
 .item>*:hover{
@@ -81,11 +81,14 @@ hr{border:2px solid var(--s);border-radius:2px;}
 .item>*>:first-child::before{
 	content:"";display:block;position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1;
 	background-color:var(--ac);
-	opacity:.5;
+	opacity:.8;
 }
 
 
-.item>:nth-child(1n){--ac:var(--r);}
-.item>:nth-child(2n){--ac:var(--g);}
-.item>:nth-child(3n){--ac:var(--b);}
-.item>:nth-child(5n+1){--ac:var(--y);}
+.item>:nth-child(1n){--ac:var(--ac1);}
+.item>:nth-child(2n){--ac:var(--ac2);}
+.item>:nth-child(3n){--ac:var(--ac3);}
+.item>:nth-child(5n){--ac:var(--ac4);}
+.item>:nth-child(7n){--ac:var(--ac5);}
+.item>:nth-child(7n+4){--ac:var(--ac5);}
+.item>:nth-child(11n){--ac:var(--ac0);}
