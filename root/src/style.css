@@ -60,7 +60,7 @@ hr{border:2px solid var(--s);border-radius:2px;}
 		background-color:var(--ac);
 	}
 }
-.item>a{color:var(--fc) !important;text-decoration:none;}
+.item>:any-link{color:var(--fc) !important;text-decoration:none;}
 .item>*>*,.item>::before{
 	margin:var(--bor) 0 0;display:block;
 	border-radius:8px;
@@ -79,7 +79,7 @@ hr{border:2px solid var(--s);border-radius:2px;}
 	box-shadow:0 0 0 4px var(--bc) inset;
 	position:relative;
 }
-.item>a>:first-child{text-decoration:underline;}
+.item>:any-link>:first-child{text-decoration:underline;}
 .item>*>:first-child::before{
 	content:"";display:block;position:absolute;top:0;left:0;right:0;bottom:0;z-index:-1;
 	background-color:var(--ac);
