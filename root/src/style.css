@@ -46,17 +46,19 @@ hr{border:2px solid var(--s);border-radius:2px;}
 	animation:s9 .3s var(--tf);
 	outline:none;
 }
-.item>*:hover{
-	transform:scale(1.05);
-	background-color:var(--bc);
-}
-.item>*:focus{
+.item>:focus,.item>:active{
 	transform:scale(1.05);
 	background-color:var(--ac);
 }
-.item>*:active{
-	transform:scale(.95);
-	background-color:var(--ac);
+@media(hover:hover){
+	.item>:hover{
+		transform:scale(1.05);
+		background-color:var(--bc);
+	}
+	.item>:active{
+		transform:scale(.95);
+		background-color:var(--ac);
+	}
 }
 .item>a{color:var(--fc) !important;text-decoration:none;}
 .item>*>*,.item>::before{
