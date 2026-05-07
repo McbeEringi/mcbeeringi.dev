@@ -1,8 +1,6 @@
 #!/usr/bin/env -S bun --install=force
-import{colordx,extend}from'@colordx/core';
-import a11y from '@colordx/core/plugins/a11y';
+import Color from'colorjs.io';
 
-extend([a11y]);
 const
 {n:[n=6],c:[a='#6ca',w='#ffd',k='#223']}=Bun.argv.slice(2).reduce((a,x)=>(
 	Bun.color(x)?a.c.push(x):+x?a.n.push(+x):0,
@@ -10,17 +8,15 @@ const
 ),{n:[],c:[]}),
 wa=Bun.color(w,'ansi'),
 ka=Bun.color(k,'ansi'),
-plte=[...Array(n)].fill(
-	colordx(a).toOklch()
-).map((x,i)=>colordx({...x,h:x.h+360/n*i})),
+plte=[...Array(n)].map((x,i)=>(x=new Color(a),x.oklch.h+=360/n*i,x)),
 rst='\x1b[0m',bld='\x1b[1m',
 f2b=x=>x.replace('[38','[48'),
-rhex=x=>`#${Object.values(x.toRgb()).map((x,i)=>(i<3?Math.round(x/17):x*15).toString(16)).join('')}`,
-	pad=(x,l=8)=>x.padStart(l);
+rhex=x=>`#${x.srgb.map((x,i)=>Math.round(x*15).toString(16)).join('')}`,
+pad=(x,l=8)=>`${x}`.padStart(l);
 
 Bun.stdout.write(plte.flatMap((x,{xc,xa})=>(
 	x=rhex(x),
-	xc=colordx(x),
+	xc=new Color(x),
 	xa=Bun.color(x,'ansi'),
 	[
 		bld,
@@ -28,8 +24,8 @@ Bun.stdout.write(plte.flatMap((x,{xc,xa})=>(
 		wa,pad(x),
 		ka,pad(x),
 		xa,
-		f2b(wa),pad(xc.readableScore(w)),
-		f2b(ka),pad(xc.readableScore(k)),
+		f2b(wa),pad(xc.contrastAPCA(w).toFixed(2)),
+		f2b(ka),pad(xc.contrastAPCA(k).toFixed(2)),
 		rst,'\n'
 	]
 )).join(''))
