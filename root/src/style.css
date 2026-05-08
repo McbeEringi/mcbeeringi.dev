@@ -72,9 +72,9 @@ hr{border:2px solid var(--s);border-radius:2px;}
 }
 .stuff>::before{
 	margin:0;
-	content:"";display:block;padding:0;padding-top:100%;
+	content:"";display:block;padding:0;padding-top:calc(100% - calc(4px * 2));
+	border:4px var(--bc) solid;
 	background:no-repeat center/cover var(--img,var(--iimg));
-	box-shadow:0 0 0 4px var(--bc) inset;
 }
 .stuff>*>:first-child{
 	font-size:larger;
