@@ -21,9 +21,11 @@
 
 hr{border:2px solid var(--s);border-radius:2px;}
 .irp{image-rendering:pixelated;}
+:any-link.nocol{color:var(--fc);}
 
 .zab{
 	padding:16px;
+	margin:16px 0;
 	border-radius:32px;
 	position:relative;
 	backdrop-filter:blur(1px);
@@ -89,10 +91,10 @@ hr{border:2px solid var(--s);border-radius:2px;}
 }
 
 
-.stuff>:nth-child(1n){--ac:var(--ac1);}
-.stuff>:nth-child(2n){--ac:var(--ac2);}
-.stuff>:nth-child(3n){--ac:var(--ac3);}
-.stuff>:nth-child(5n){--ac:var(--ac4);}
-.stuff>:nth-child(7n){--ac:var(--ac5);}
-.stuff>:nth-child(7n+4){--ac:var(--ac5);}
-.stuff>:nth-child(11n){--ac:var(--ac0);}
+:nth-child( 1n+0 of .stuff>*,.zab){--ac:var(--ac1);}
+:nth-child( 2n+0 of .stuff>*,.zab){--ac:var(--ac2);}
+:nth-child( 3n+1 of .stuff>*,.zab){--ac:var(--ac3);}
+:nth-child( 5n+1 of .stuff>*,.zab){--ac:var(--ac4);}
+:nth-child( 7n+0 of .stuff>*,.zab){--ac:var(--ac5);}
+:nth-child( 7n+3 of .stuff>*,.zab){--ac:var(--ac5);}
+:nth-child(11n+1 of .stuff>*,.zab){--ac:var(--ac0);}
