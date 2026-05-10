@@ -1,5 +1,5 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap'); */
-@import url('https://font.mcbeeringi.dev/main.css');
+/* @import url('https://font.mcbeeringi.dev/main.css'); */
 :root{
 	--k:#223;--w:#ffd;--s:#aaac;
 	--ac0:#6ca;--ac1:#6be;--ac2:#baf;--ac3:#e9b;--ac4:#e97;--ac5:#bb6;
@@ -20,6 +20,7 @@
 }
 @keyframes s9{0%{transform:scale(.9);}}
 
+main{max-width:960px;margin:0 auto;}
 hr{border:2px solid var(--s);border-radius:2px;}
 .irp{image-rendering:pixelated;}
 :any-link.nocol{color:var(--fc);}

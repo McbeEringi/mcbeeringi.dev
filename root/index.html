@@ -2,6 +2,8 @@
 <html prefix="og:http://ogp.me/ns#" lang="ja">
 <head>
 	<meta charset="utf-8">
+	<link rel="preload" href="https://font.mcbeeringi.dev/ZenMaruGothic-Regular.ttf.woff2" as="font" type="font/woff2" crossorigin>
+	<link rel="preload" href="https://font.mcbeeringi.dev/ZenMaruGothic-Bold.ttf.woff2" as="font" type="font/woff2" crossorigin>
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<title>McbeEringi HomePage</title>
 	<meta name="description" content="McbeEringi HomePage">
@@ -12,9 +14,20 @@
 	<meta property="og:url" content="https://mcbeeringi.dev/">
 	<meta property="og:image" content="https://mcbeeringi.dev/img/icon.png">
 
+	<style>
+	@font-face{
+		font-family:'ZenMaruGothic';font-weight:normal;font-display:swap;
+		src:url('https://font.mcbeeringi.dev/ZenMaruGothic-Regular.ttf.woff2') format('woff2');
+	}
+	@font-face{
+		font-family:'ZenMaruGothic';font-weight:bold;font-display:swap;
+		src:url('https://font.mcbeeringi.dev/ZenMaruGothic-Bold.ttf.woff2') format('woff2');
+	}
+	</style>
 	<link rel="stylesheet" href="src/style.css">
 </head>
 <body>
+	<main role="main">
 	<h1>エリンギ@McbeEringi</h1>
 	<p>McbeEringiの個人サイト工事現場です</p>
 	<p>WIP……</p>
@@ -29,7 +42,7 @@
 		</div>
 	</div>
 	<div class="zab">
-		<a href="frag" class="nocol"><h2>.frag</h2></a>
+		<h2><a href="frag" class="nocol">.frag</a></h2>
 		<div class="stuff">
 			<a href="frag"><p>.frag</p></a>
 		</div>
@@ -58,6 +71,7 @@
 			<a href="https://yuubinnkyoku.github.io/" style="--img:url(../img/links/yuubinnkyoku.github.io.png)"><p>〒«ゆうびんきょく»のホームページ</p><p>勝手に期待している後輩</p></a>
 		</div>
 	</div>
+	</main>
 	<script>document.documentElement.addEventListener('touchstart',_=>_,{passive:true});</script>
 </body>
 </html>
