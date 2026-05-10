@@ -11,7 +11,7 @@
 	--tf:cubic-bezier(0,0,0,1.5);
 	--bc:var(--w);--fc:var(--k);--iimg:var(--iconl);
 	color:var(--fc);background:0 0/5cm url("../img/cross.svg") var(--bc);
-	font-family:"Zen Maru Gothic",sans-serif;
+	font-family:"ZenMaruGothic",sans-serif;
 	text-shadow:0 0 var(--bor) var(--bc),0 0 var(--bor) var(--bc);
 }
 @media(prefers-color-scheme:dark){
