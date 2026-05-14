@@ -49,8 +49,8 @@
 	</div>
 	<div class="zab">
 		<h2>.link</h2>
-		<p>個人サイトを持っている同胞<br>ドメイン順 敬称略</p>
-		<div class="stuff">
+		<p>個人サイトを持っている同胞<br>敬称略</p>
+		<div class="stuff" id="link">
 			<a href="https://akitoshi-lab.com/" style="--img:url(../img/links/akitoshi-lab.com.png)"><p>Akitoshi Lab.</p><p>the技術屋</p></a>
 			<a href="https://cutterknife.studio.site/" style="--img:url(../img/links/cutterknife.studio.site.png)"><p>かったあ/Cutter</p><p>最寄りのデザイン屋</p></a>
 			<a href="https://daidai100.github.io/" style="--img:url(../img/links/daidai100.github.io.png)"><p>Daidai's Home</p><p>ロボット屋?</p></a>
@@ -72,6 +72,9 @@
 		</div>
 	</div>
 	</main>
-	<script>document.documentElement.addEventListener('touchstart',_=>_,{passive:true});</script>
+	<script>
+		document.documentElement.addEventListener('touchstart',_=>_,{passive:true});
+		[...link.children].map(x=>(x.x=Math.random(),x)).sort((a,b)=>a.x-b.x).forEach((x,i)=>x.style.order=i);
+	</script>
 </body>
 </html>
