@@ -11,7 +11,7 @@ ka=Bun.color(k,'ansi'),
 plte=[...Array(n)].map((x,i)=>(x=new Color(a),x.oklch.h+=360/n*i,x)),
 rst='\x1b[0m',bld='\x1b[1m',
 f2b=x=>x.replace('[38','[48'),
-rhex=x=>`#${x.srgb.map((x,i)=>Math.round(x*15).toString(16)).join('')}`,
+rhex=x=>`#${x.srgb.map((x,i)=>Math.round(Math.max(Math.min(x,1),0)*15).toString(16)).join('')}`,
 pad=(x,l=8)=>`${x}`.padStart(l);
 
 Bun.stdout.write(plte.flatMap((x,{xc,xa})=>(
