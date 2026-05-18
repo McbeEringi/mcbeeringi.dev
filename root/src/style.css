@@ -29,7 +29,6 @@ hr{border:2px solid var(--s);border-radius:2px;}
 	margin:16px 0;
 	border-radius:32px;
 	position:relative;
-	backdrop-filter:blur(1px);
 	overflow:hidden;
 }
 .zab::before{

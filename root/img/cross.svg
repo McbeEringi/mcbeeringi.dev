@@ -9,7 +9,7 @@
 		<path d="M2,5h6M5,2v6" stroke-width="1.5"/>
 	</pattern>
 </defs>
-<g opacity=".5">
+<g opacity=".25">
 	<use href="#b" fill="url(#g0)"/>
 	<use href="#b" fill="url(#g1)"/>
 </g>
