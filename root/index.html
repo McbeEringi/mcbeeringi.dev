@@ -62,7 +62,7 @@
 	</main>
 	<script>
 		document.documentElement.addEventListener('touchstart',_=>_,{passive:true});
-		[...link.children].map(x=>(x.x=Math.random(),x)).sort((a,b)=>a.x-b.x).forEach((x,i)=>x.style.order=i);
+		[...link.children].forEach(x=>x.style.order=Math.random()*65536|0);
 	</script>
 </body>
 </html>
